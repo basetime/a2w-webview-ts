@@ -1,16 +1,7 @@
+import type { Message } from './Message';
+
 export interface Addtowallet {
-  /**
-   * The name of the app.
-   */
-  name: string;
-
-  /**
-   * The URL of the app.
-   */
-  url: string;
-
-  /**
-   * The icon of the app.
-   */
-  icon: string;
+  send: (message: Message) => void;
+  on: (event: string, callback: (message: Message) => void) => void;
+  off: (event: string, callback: (message: Message) => void) => void;
 }

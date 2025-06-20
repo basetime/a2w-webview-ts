@@ -1,5 +1,6 @@
-import EmbeddedApp from './EmbeddedApp';
+import type { Message } from './Message';
+import WebApp from './WebApp';
 
-export {
-  EmbeddedApp,
-}
+export { WebApp };
+
+export type { Message };

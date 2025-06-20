@@ -1,0 +1,88 @@
+{
+  "root": true,
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:jsdoc/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": ["./tsconfig.json"],
+    "sourceType": "module"
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {},
+      "node": {
+        "extensions": [".ts"],
+        "moduleDirectory": ["node_modules", "src/"]
+      }
+    },
+    "jsdoc": {
+      "mode": "typescript"
+    }
+  },
+  "plugins": ["@typescript-eslint", "jsdoc"],
+  "rules": {
+    "@typescript-eslint/indent": 0,
+    "@typescript-eslint/space-infix-ops": 0,
+    "@typescript-eslint/lines-between-class-members": 0,
+    "@typescript-eslint/no-invalid-this": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-extra-semi": 1,
+    "@typescript-eslint/no-unused-vars": 1,
+    "@typescript-eslint/ban-ts-comment": 0,
+    "indent": 0,
+    "semi": 0,
+    "camelcase": 0,
+    "no-invalid-this": 0,
+    "arrow-body-style": 0,
+    "no-plusplus": 0,
+    "no-continue": 0,
+    "spaced-comment": 0,
+    "no-unused-vars": 0,
+    "no-case-declarations": 0,
+    "valid-jsdoc": 0,
+    "jsdoc/require-param-description": 0,
+    "jsdoc/require-param-type": 0,
+    "jsdoc/require-returns": 0,
+    "jsdoc/require-param": 0,
+    "jsdoc/tag-lines": ["warn", "any", { "startLines": 1 }],
+    "jsdoc/require-jsdoc": [
+      "error",
+      {
+        "exemptEmptyFunctions": true,
+        "require": {
+          "FunctionExpression": true,
+          "ClassDeclaration": true,
+          "ArrowFunctionExpression": true,
+          "FunctionDeclaration": true,
+          "MethodDefinition": true
+        }
+      }
+    ],
+    "func-style": ["error", "expression"],
+    "max-classes-per-file": 0,
+    "import/prefer-default-export": 0,
+    "no-param-reassign": 0,
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-await-in-loop": 0,
+    "class-methods-use-this": 0,
+    "no-underscore-dangle": 0,
+    "prefer-destructuring": 0,
+    "import/no-named-as-default": 0,
+    "import/no-named-as-default-member": 0,
+    "max-len": ["warn", { "code": 150 }],
+    "object-curly-newline": 0,
+    "object-curly-spacing": ["warn", "always"]
+  }
+}

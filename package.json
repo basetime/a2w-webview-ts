@@ -1,0 +1,30 @@
+{
+  "name": "a2w-scanner-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "clean": "rm -rf build",
+    "build": "pnpm clean && pnpm tsc",
+    "watch": "pnpm tsc --watch --preserveWatchOutput",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "keywords": [],
+  "author": "Avagate Inc.",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@jest/types": "^29.6.3",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^17.0.39",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsdoc": "^48.2.2",
+    "fetch-mock": "^11.1.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.4",
+    "typescript": "^5.5.4"
+  }
+}

@@ -30,7 +30,7 @@ Alternatively, you import the `WebApp` class directly from the CDN:
 <script type="module">
   import WebApp from 'https://cdn.addtowallet.io/js/scanner/v0.0.3/WebApp.js';
 
-  const webApp = new atw.WebApp();
+  const webApp = new WebApp();
 
   // Listen for scan events from the scanner.
   webApp.on('scan', (message) => {

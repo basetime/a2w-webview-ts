@@ -43,8 +43,5 @@ Alternatively, you import the `WebApp` class directly from the CDN:
   webApp.on('scan', (message) => {
     console.log(message);
   });
-
-  // Send a message to the scanner to navigate to the scan screen.
-  webApp.send({ action: 'navigate', payload: 'scan' });
 </script>
 ```

@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "",
   "main": "build/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "clean": "rm -rf build",
     "build": "pnpm clean && pnpm tsc",

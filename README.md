@@ -23,10 +23,12 @@ if (!webApp.isEmbedded) {
 // Listen for scan events from the scanner.
 webApp.on('scan', (message) => {
   console.log(message);
-});
 
-// Send a message to the scanner to navigate to the scan screen.
-webApp.send({ action: 'navigate', payload: 'scan' });
+  // Wait 5 seconds before navigating to the scan screen.
+  setTimeout(() => {
+    webApp.send({ action: 'navigate', payload: 'scan' });
+  }, 5000);
+});
 ```
 
 Alternatively, you import the `WebApp` class directly from the CDN:

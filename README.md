@@ -15,6 +15,11 @@ import { WebApp } from '@basetime/a2w-scanner-ts';
 
 const webApp = new WebApp();
 
+// Check if the app is embedded in the atw scanner webview.
+if (!webApp.isEmbedded) {
+  throw new Error('This app is not embedded in the atw scanner webview.');
+}
+
 // Listen for scan events from the scanner.
 webApp.on('scan', (message) => {
   console.log(message);

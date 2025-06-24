@@ -21,6 +21,15 @@ if (!webApp.isEmbedded) {
 }
 
 // Listen for scan events from the scanner.
+// The message object contains the following properties:
+// - `scanner`: The scanner id.
+// - `location`: The location of the scanner.
+// - `found`: Whether the pass was found or not. Value will be `true` or `false`.
+// - `pass`: The pass id.
+// - `campaign`: The campaign id.
+// - `primaryKey`: The primary key of the pass when the pass was found.
+// - `webviewHeight`: The height of the webview.
+// - `webviewWidth`: The width of the webview.
 webApp.on('scan', (message) => {
   console.log(message);
 
@@ -28,6 +37,17 @@ webApp.on('scan', (message) => {
   setTimeout(() => {
     webApp.send({ action: 'navigate', payload: 'scan' });
   }, 5000);
+});
+
+// Triggered when the scanner is on the home screen.
+// The message object contains the following properties:
+// - `scanner`: The scanner id.
+// - `location`: The location of the scanner.
+// - `webviewHeight`: The height of the webview.
+// - `webviewWidth`: The width of the webview.
+webApp.on('standby', (message) => {
+  console.log(message);
+  console.log('The scanner is in standby mode.');
 });
 ```
 
@@ -42,6 +62,11 @@ Alternatively, you import the `WebApp` class directly from the CDN:
   // Listen for scan events from the scanner.
   webApp.on('scan', (message) => {
     console.log(message);
+  });
+
+  // Listen for standby events from the scanner.
+  webApp.on('standby', (message) => {
+    console.log('The scanner is in standby mode.');
   });
 </script>
 ```

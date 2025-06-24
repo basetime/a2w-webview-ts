@@ -33,9 +33,9 @@ if (!webApp.isEmbedded) {
 webApp.on('scan', (message) => {
   console.log(message);
 
-  // Wait 5 seconds before navigating to the scan screen.
+  // Wait 5 seconds before navigating to the standby screen.
   setTimeout(() => {
-    webApp.send({ action: 'navigate', payload: 'scan' });
+    webApp.send({ action: 'navigate', payload: '/' });
   }, 5000);
 });
 

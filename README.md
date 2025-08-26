@@ -25,9 +25,7 @@ if (!webApp.isEmbedded) {
 // - `scanner`: The scanner id.
 // - `location`: The location of the scanner.
 // - `found`: Whether the pass was found or not. Value will be `true` or `false`.
-// - `pass`: The pass id.
-// - `campaign`: The campaign id.
-// - `primaryKey`: The primary key of the pass when the pass was found.
+// - `pass`: The entire pass object, which contains the campaign.
 // - `webviewHeight`: The height of the webview.
 // - `webviewWidth`: The width of the webview.
 webApp.on('scan', (message) => {

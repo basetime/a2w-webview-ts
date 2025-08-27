@@ -1,10 +1,10 @@
 import type { Addtowallet } from './Addtowallet';
-import type { Message } from './Message';
+import type { AppEvents, Message } from './Message';
 
 /**
  * Provides two way communication with the atw scanner.
  */
-export default class WebApp {
+export default class WebApp<E extends Record<string, unknown> = AppEvents> {
   /**
    * Is the app embedded in the atw scanner webview?
    */
@@ -24,12 +24,16 @@ export default class WebApp {
   }
 
   /**
-   * Posts a message to the scanner.
+   * Sends a message to the scanner.
    *
-   * @param message The message to post.
+   * @param event The event to post.
+   * @param payload The message to post.
    */
-  public send = (message: Message): void => {
-    this.atw?.send(message);
+  public send = <K extends keyof E>(event: K, payload: E[K]): void => {
+    this.atw?.send({
+      action: event.toString(),
+      payload,
+    });
   };
 
   /**
@@ -40,8 +44,11 @@ export default class WebApp {
    * @param event The event to listen to.
    * @param callback The callback to call when a message is received.
    */
-  public on = (event: string, callback: (message: Message) => void): (() => void) => {
-    this.atw?.on(event, callback);
+  public on = <K extends keyof E>(
+    event: K,
+    callback: (message: Message<E, K>) => void,
+  ): (() => void) => {
+    this.atw?.on(event.toString(), callback);
 
     return () => {
       this.off(event, callback);
@@ -54,7 +61,7 @@ export default class WebApp {
    * @param event The event to remove.
    * @param callback The callback to remove.
    */
-  public off = (event: string, callback: (message: Message) => void): void => {
-    this.atw?.off(event, callback);
+  public off = <K extends keyof E>(event: K, callback: (message: Message<E, K>) => void): void => {
+    this.atw?.off(event.toString(), callback);
   };
 }

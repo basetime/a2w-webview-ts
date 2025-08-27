@@ -28,12 +28,12 @@ if (!webApp.isEmbedded) {
 // - `pass`: The entire pass object, which contains the campaign.
 // - `webviewHeight`: The height of the webview.
 // - `webviewWidth`: The width of the webview.
-webApp.on('scan', (message) => {
-  console.log(message);
+webApp.on('scan', ({ payload }) => {
+  console.log(payload);
 
   // Wait 5 seconds before navigating to the standby screen.
   setTimeout(() => {
-    webApp.send({ action: 'navigate', payload: '/' });
+    webApp.send('navigate', { url: '/' });
   }, 5000);
 });
 
@@ -43,8 +43,8 @@ webApp.on('scan', (message) => {
 // - `location`: The location of the scanner.
 // - `webviewHeight`: The height of the webview.
 // - `webviewWidth`: The width of the webview.
-webApp.on('standby', (message) => {
-  console.log(message);
+webApp.on('standby', ({ payload }) => {
+  console.log(payload);
   console.log('The scanner is in standby mode.');
 });
 ```
@@ -58,12 +58,12 @@ Alternatively, you import the `WebApp` class directly from the CDN:
   const webApp = new WebApp();
 
   // Listen for scan events from the scanner.
-  webApp.on('scan', (message) => {
-    console.log(message);
+  webApp.on('scan', ({ payload }) => {
+    console.log(payload);
   });
 
   // Listen for standby events from the scanner.
-  webApp.on('standby', (message) => {
+  webApp.on('standby', ({ payload }) => {
     console.log('The scanner is in standby mode.');
   });
 </script>

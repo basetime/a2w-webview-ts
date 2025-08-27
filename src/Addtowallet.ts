@@ -1,7 +1,7 @@
 import type { Message } from './Message';
 
 export interface Addtowallet {
-  send: (message: Message) => void;
-  on: (event: string, callback: (message: Message) => void) => void;
-  off: (event: string, callback: (message: Message) => void) => void;
+  send: (message: Message<any, any>) => void;
+  on: (event: string, callback: (message: Message<any, any>) => void) => void;
+  off: (event: string, callback: (message: Message<any, any>) => void) => void;
 }

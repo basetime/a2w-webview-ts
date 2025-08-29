@@ -46,6 +46,7 @@ webApp.on('scan', ({ payload }) => {
 // Triggered when the scanner is on the home screen.
 // The message object contains the following properties:
 // - `scanner`: The scanner id.
+// - `password`: The password if one was set in the Addtowallet app.
 // - `location`: The location of the scanner.
 // - `webviewHeight`: The height of the webview.
 // - `webviewWidth`: The width of the webview.

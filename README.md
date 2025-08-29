@@ -26,10 +26,16 @@ if (!webApp.isEmbedded) {
 // - `location`: The location of the scanner.
 // - `found`: Whether the pass was found or not. Value will be `true` or `false`.
 // - `pass`: The entire pass object, which contains the campaign.
+// - `password`: The password if one was set in the Addtowallet app.
 // - `webviewHeight`: The height of the webview.
 // - `webviewWidth`: The width of the webview.
 webApp.on('scan', ({ payload }) => {
   console.log(payload);
+
+  // Check the password if one as set in the Addtowallet app.
+  if (payload.password !== '123434) {
+    throw new Error('Invalid password.');
+  }
 
   // Wait 5 seconds before navigating to the standby screen.
   setTimeout(() => {

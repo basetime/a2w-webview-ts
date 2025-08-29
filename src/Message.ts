@@ -33,6 +33,16 @@ export interface ScanPayload {
    * The pass object.
    */
   pass: Pass;
+
+  /**
+   * The tags associated with the scanner.
+   */
+  tags: string[];
+
+  /**
+   * A password used to authenticate the request.
+   */
+  password: string;
 }
 
 /**
@@ -58,6 +68,11 @@ export interface StandbyPayload {
    * The width of the scanner webview.
    */
   webviewWidth: number;
+
+  /**
+   * A password used to authenticate the request.
+   */
+  password: string;
 }
 
 /**

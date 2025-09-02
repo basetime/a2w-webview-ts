@@ -12,7 +12,7 @@
     "watch": "pnpm tsc --watch --preserveWatchOutput",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "postpublish": "pnpm build && ./upload-build.sh"
+    "postpublish": "pnpm build"
   },
   "keywords": [],
   "author": "Avagate Inc.",

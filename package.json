@@ -8,7 +8,7 @@
   },
   "scripts": {
     "clean": "rm -rf build",
-    "build": "pnpm clean && pnpm tsc",
+    "build": "pnpm tsc",
     "watch": "pnpm tsc --watch --preserveWatchOutput",
     "test": "jest",
     "test:watch": "jest --watchAll",

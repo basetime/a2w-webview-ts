@@ -23,6 +23,7 @@ if (!webApp.isEmbedded) {
 // Listen for scan events from the scanner.
 // The message object contains the following properties:
 // - `scanner`: The scanner id.
+// - `tags`: The tags associated with the scanner app.
 // - `location`: The location of the scanner.
 // - `found`: Whether the pass was found or not. Value will be `true` or `false`.
 // - `pass`: The entire pass object, which contains the campaign.

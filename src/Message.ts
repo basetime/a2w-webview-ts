@@ -43,6 +43,11 @@ export interface ScanPayload {
    * A password used to authenticate the request.
    */
   password: string;
+
+  /**
+   * Additional settings for the scanner.
+   */
+  settings: Record<string, any>;
 }
 
 /**
@@ -73,6 +78,11 @@ export interface StandbyPayload {
    * A password used to authenticate the request.
    */
   password: string;
+
+  /**
+   * Additional settings for the scanner.
+   */
+  settings: Record<string, any>;
 }
 
 /**

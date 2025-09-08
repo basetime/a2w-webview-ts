@@ -23,6 +23,7 @@ if (!webApp.isEmbedded) {
 // Listen for scan events from the scanner.
 // The message object contains the following properties:
 // - `scanner`: The scanner id.
+// - `settings`: The settings associated with the scanner.
 // - `tags`: The tags associated with the scanner app.
 // - `location`: The location of the scanner.
 // - `found`: Whether the pass was found or not. Value will be `true` or `false`.
@@ -47,6 +48,7 @@ webApp.on('scan', ({ payload }) => {
 // Triggered when the scanner is on the home screen.
 // The message object contains the following properties:
 // - `scanner`: The scanner id.
+// - `settings`: The settings associated with the scanner.
 // - `password`: The password if one was set in the Addtowallet app.
 // - `location`: The location of the scanner.
 // - `webviewHeight`: The height of the webview.

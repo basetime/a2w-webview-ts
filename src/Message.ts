@@ -86,6 +86,51 @@ export interface StandbyPayload {
 }
 
 /**
+ * Payload for the 'error' event.
+ */
+export interface ErrorPayload {
+  /**
+ * The ID of the scanner.
+ */
+  scanner: string;
+
+  /**
+   * The location of the device as "latitude,longitude".
+   */
+  location: string;
+
+  /**
+   * The height of the scanner webview.
+   */
+  webviewHeight: number;
+
+  /**
+   * The width of the scanner webview.
+   */
+  webviewWidth: number;
+
+  /**
+   * A password used to authenticate the request.
+   */
+  password: string;
+
+  /**
+   * Additional settings for the scanner.
+   */
+  settings: Record<string, any>;
+
+  /**
+   * The error message.
+   */
+  errorMessage: string;
+
+  /**
+   * The error code.
+   */
+  errorCode: number;
+}
+
+/**
  * Payload for the 'navigate' event.
  */
 export interface NavigatePayload {
@@ -123,6 +168,11 @@ export type AppEvents = {
    * Triggered when the scanner is on the home screen.
    */
   standby: StandbyPayload;
+
+  /**
+   * Triggered when an error occurs.
+   */
+  error: ErrorPayload;
 
   /**
    * Triggered to tell the scanner to navigate to a URL.

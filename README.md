@@ -57,6 +57,21 @@ webApp.on('standby', ({ payload }) => {
   console.log(payload);
   console.log('The scanner is in standby mode.');
 });
+
+// Triggered when an error is encountered in the scanner. For example,
+// if a pass or campaign is not found.
+// - `scanner`: The scanner id.
+// - `settings`: The settings associated with the scanner.
+// - `password`: The password if one was set in the Addtowallet app.
+// - `location`: The location of the scanner.
+// - `webviewHeight`: The height of the webview.
+// - `webviewWidth`: The width of the webview.
+// - `errorCode`: A representation of the error, e.g. 404
+// - `errorMessage`: A string representation of the error, e.g. "Campaign not found"
+webApp.on('error', ({ payload }) => {
+  console.log(payload.errorCode);
+  console.log(payload.errorMessage);
+});
 ```
 
 Alternatively, you import the `WebApp` class directly from the CDN:
@@ -75,6 +90,11 @@ Alternatively, you import the `WebApp` class directly from the CDN:
   // Listen for standby events from the scanner.
   webApp.on('standby', ({ payload }) => {
     console.log('The scanner is in standby mode.');
+  });
+
+  // Listen for error events from the scanner.
+  webApp.on('error', ({ payload }) => {
+    console.log('There has been an error.');
   });
 </script>
 ```

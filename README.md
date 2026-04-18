@@ -32,10 +32,10 @@ if (!webApp.isEmbedded) {
 // - `webviewHeight`: The height of the webview.
 // - `webviewWidth`: The width of the webview.
 // - `device`: {
-// -    manufacturer: e.g. Android: "Google", "xiaomi"; iOS: "Apple"; web: "Google", null,
-// -    model: e.g. Android: "Pixel 2"; iOS: "iPhone XS Max"; web: "iPhone", null,
-// -    osVersion: e.g. Android: "4.0.3"; iOS: "12.3.1"; web: "11.0", "8.1.0",
-// -    deviceName: e.g. name of the phone, "Vivian's iPhone XS",
+// -    manufacturer: e.g. "Google", "xiaomi", "Apple", "Google", null
+// -    model: e.g. "Pixel 2", "iPhone XS Max", "iPhone", null
+// -    osVersion: e.g. "4.0.3", "12.3.1", "11.0", "8.1.0"
+// -    deviceName: e.g. name of the phone, "Vivian's iPhone XS"
 // - }
 webApp.on('scan', ({ payload }) => {
   console.log(payload);
@@ -63,10 +63,10 @@ webApp.on('scan', ({ payload }) => {
 // - `webviewHeight`: The height of the webview.
 // - `webviewWidth`: The width of the webview.
 // - `device`: {
-// -    manufacturer: e.g. Android: "Google", "xiaomi"; iOS: "Apple"; web: "Google", null,
-// -    model: e.g. Android: "Pixel 2"; iOS: "iPhone XS Max"; web: "iPhone", null,
-// -    osVersion: e.g. Android: "4.0.3"; iOS: "12.3.1"; web: "11.0", "8.1.0",
-// -    deviceName: e.g. name of the phone, "Vivian's iPhone XS",
+// -    manufacturer: e.g. "Google", "xiaomi", "Apple", "Google", null
+// -    model: e.g. "Pixel 2", "iPhone XS Max", "iPhone", null
+// -    osVersion: e.g. "4.0.3", "12.3.1", "11.0", "8.1.0"
+// -    deviceName: e.g. name of the phone, "Vivian's iPhone XS"
 // - }
 webApp.on('standby', ({ payload }) => {
   console.log(payload);
@@ -84,10 +84,10 @@ webApp.on('standby', ({ payload }) => {
 // - `errorCode`: A representation of the error, e.g. 404
 // - `errorMessage`: A string representation of the error, e.g. "Campaign not found"
 // - `device`: {
-// -    manufacturer: e.g. Android: "Google", "xiaomi"; iOS: "Apple"; web: "Google", null,
-// -    model: e.g. Android: "Pixel 2"; iOS: "iPhone XS Max"; web: "iPhone", null,
-// -    osVersion: e.g. Android: "4.0.3"; iOS: "12.3.1"; web: "11.0", "8.1.0",
-// -    deviceName: e.g. name of the phone, "Vivian's iPhone XS",
+// -    manufacturer: e.g. "Google", "xiaomi", "Apple", "Google", null
+// -    model: e.g. "Pixel 2", "iPhone XS Max", "iPhone", null
+// -    osVersion: e.g. "4.0.3", "12.3.1", "11.0", "8.1.0"
+// -    deviceName: e.g. name of the phone, "Vivian's iPhone XS"
 // - }
 webApp.on('error', ({ payload }) => {
   console.log(payload.errorCode);

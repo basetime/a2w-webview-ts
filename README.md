@@ -31,8 +31,17 @@ if (!webApp.isEmbedded) {
 // - `password`: The password if one was set in the Addtowallet app.
 // - `webviewHeight`: The height of the webview.
 // - `webviewWidth`: The width of the webview.
+// - `device`: {
+// -    manufacturer: e.g. Android: "Google", "xiaomi"; iOS: "Apple"; web: "Google", null,
+// -    model: e.g. Android: "Pixel 2"; iOS: "iPhone XS Max"; web: "iPhone", null,
+// -    osVersion: e.g. Android: "4.0.3"; iOS: "12.3.1"; web: "11.0", "8.1.0",
+// -    deviceName: e.g. name of the phone, "Vivian's iPhone XS",
+// - }
 webApp.on('scan', ({ payload }) => {
   console.log(payload);
+
+  const isApple = payload.device.model.toLowerCase().includes('iphone');
+  console.log(`Using ${isApple ? 'iPhone' : 'Android'}`);
 
   // Check the password if one as set in the Addtowallet app.
   if (payload.password !== '123434) {
@@ -53,6 +62,12 @@ webApp.on('scan', ({ payload }) => {
 // - `location`: The location of the scanner.
 // - `webviewHeight`: The height of the webview.
 // - `webviewWidth`: The width of the webview.
+// - `device`: {
+// -    manufacturer: e.g. Android: "Google", "xiaomi"; iOS: "Apple"; web: "Google", null,
+// -    model: e.g. Android: "Pixel 2"; iOS: "iPhone XS Max"; web: "iPhone", null,
+// -    osVersion: e.g. Android: "4.0.3"; iOS: "12.3.1"; web: "11.0", "8.1.0",
+// -    deviceName: e.g. name of the phone, "Vivian's iPhone XS",
+// - }
 webApp.on('standby', ({ payload }) => {
   console.log(payload);
   console.log('The scanner is in standby mode.');
@@ -68,6 +83,12 @@ webApp.on('standby', ({ payload }) => {
 // - `webviewWidth`: The width of the webview.
 // - `errorCode`: A representation of the error, e.g. 404
 // - `errorMessage`: A string representation of the error, e.g. "Campaign not found"
+// - `device`: {
+// -    manufacturer: e.g. Android: "Google", "xiaomi"; iOS: "Apple"; web: "Google", null,
+// -    model: e.g. Android: "Pixel 2"; iOS: "iPhone XS Max"; web: "iPhone", null,
+// -    osVersion: e.g. Android: "4.0.3"; iOS: "12.3.1"; web: "11.0", "8.1.0",
+// -    deviceName: e.g. name of the phone, "Vivian's iPhone XS",
+// - }
 webApp.on('error', ({ payload }) => {
   console.log(payload.errorCode);
   console.log(payload.errorMessage);

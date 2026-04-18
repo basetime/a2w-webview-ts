@@ -30,13 +30,6 @@ export interface ScannerDeviceInfo {
    * by the device's user. If the device name is unavailable,
    * particularly on web, this value is `null`.
    */
-  device: string | null;
-
-  /**
-   * The human-readable name of the device, which may be set
-   * by the device's user. If the device name is unavailable,
-   * particularly on web, this value is `null`.
-   */
   deviceName: string | null;
 }
 

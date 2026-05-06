@@ -71,6 +71,14 @@ webApp.on('scan', ({ payload }) => {
 webApp.on('standby', ({ payload }) => {
   console.log(payload);
   console.log('The scanner is in standby mode.');
+
+  // Override these settings in the scanner app.
+  // They remain overridden until the `force` flag is
+  // used by the backend.
+  webApp.send('settings', {
+    pin: '1234',
+    webviewStandbyUrl: 'https://example.com/standby',
+  });
 });
 
 // Triggered when an error is encountered in the scanner. For example,

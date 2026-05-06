@@ -188,6 +188,88 @@ export interface NavigatePayload {
   url: string;
 }
 
+export type LogLevel = 'debug' | 'info' | 'error';
+
+/**
+ * Settings for the scanner.
+ */
+export interface Settings {
+  /**
+   * The base url of the api.
+   */
+  baseUrl: string;
+
+  /**
+   * The pin that unlocks the settings screen.
+   */
+  pin: string;
+
+  /**
+   * The brand color.
+   */
+  brandColor: string;
+
+  /**
+   * The brand logo URL.
+   */
+  brandLogoUrl: string;
+
+  /**
+   * The tags associated with the scanner.
+   */
+  tags: string[];
+
+  /**
+   * The url of the page to display in the scan webview.
+   */
+  webviewScanUrl: string;
+
+  /**
+   * The url of the page to display in the pass standby webview.
+   */
+  webviewStandbyUrl: string;
+
+  /**
+   * The url of the page to display in the error webview.
+   */
+  webviewErrorUrl: string;
+
+  /**
+   * The password to use to access the webview.
+   */
+  webviewPassword: string;
+
+  /**
+   * Whether or not to hide the scan button on the home screen.
+   */
+  isKioskMode: boolean;
+
+  /**
+   * Whether or not to enable debug mode for the webviews.
+   */
+  debugWebviews: boolean;
+
+  /**
+   * Minimum log severity: debug logs everything; info logs info and errors; error only errors.
+   */
+  logLevel: LogLevel;
+
+  /**
+   * Additional settings.
+   */
+  additionalSettings: Record<string, any>;
+}
+
+/**
+ * Payload for the 'settings' event.
+ */
+export interface SettingsPayload {
+  /**
+   * The settings to update.
+   */
+  settings: Partial<Settings>;
+}
+
 /**
  * The event message.
  */
@@ -226,4 +308,9 @@ export type AppEvents = {
    * Triggered to tell the scanner to navigate to a URL.
    */
   navigate: NavigatePayload;
+
+  /**
+   * Triggered to tell the scanner to update the settings.
+   */
+  settings: SettingsPayload;
 };

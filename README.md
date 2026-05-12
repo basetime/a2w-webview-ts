@@ -48,7 +48,7 @@ webApp.on('scan', ({ payload }) => {
     throw new Error('Invalid password.');
   }
 
-  // Notify the scanner that the webview is ready.
+  // Notify the scanner that the webview is ready. (Not currently used.)
   webApp.send('ready');
 
   // Wait 5 seconds before navigating to the standby screen.

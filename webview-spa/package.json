@@ -10,7 +10,7 @@
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
-    "@basetime/a2w-scanner-ts": "^0.1.11",
+    "@basetime/a2w-scanner-ts": "^0.1.12",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

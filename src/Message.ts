@@ -188,6 +188,16 @@ export interface NavigatePayload {
   url: string;
 }
 
+/**
+ * Payload for the 'ready' event.
+ */
+export interface ReadyPayload {
+  /**
+   * The status of the webview.
+   */
+  status?: string;
+}
+
 export type LogLevel = 'debug' | 'info' | 'error';
 
 /**
@@ -218,6 +228,13 @@ export interface Settings {
    * The tags associated with the scanner.
    */
   tags: string[];
+
+  /**
+   * The url of the persistent single-page-app webview that is loaded once at
+   * app boot and reused across screens via events instead of being reloaded.
+   * When empty, the per-screen webviews above are used as before.
+   */
+  webviewSpaUrl: string;
 
   /**
    * The url of the page to display in the scan webview.
@@ -308,6 +325,11 @@ export type AppEvents = {
    * Triggered to tell the scanner to navigate to a URL.
    */
   navigate: NavigatePayload;
+
+  /**
+   * Triggered when the webview is ready.
+   */
+  ready: ReadyPayload;
 
   /**
    * Triggered to tell the scanner to update the settings.

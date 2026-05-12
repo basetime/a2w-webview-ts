@@ -5,6 +5,8 @@ hosted by scanner. It listens for the events the native side
 fires (`standby`, `scan`, `error`) and renders a stub screen for each, plus a
 debug panel that lets you round-trip messages back to native.
 
+See the SPA example in [examples/webview-spa](examples/webview-spa).
+
 ## Run
 
 ```bash

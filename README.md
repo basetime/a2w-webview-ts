@@ -242,6 +242,14 @@ webApp.send('navigate', { url: '/' });
 
 - `url` (`string`): The URL (or path) the scanner should navigate to.
 
+### `ready`
+
+Sent from your app to the scanner to notify it that the webview is ready.
+
+```typescript
+webApp.send('ready');
+```
+
 ### `settings`
 
 Sent from your app to override scanner settings at runtime. Overrides

@@ -29,10 +29,10 @@ export default class WebApp<E extends Record<string, unknown> = AppEvents> {
    * @param event The event to post.
    * @param payload The message to post.
    */
-  public send = <K extends keyof E>(event: K, payload: E[K]): void => {
+  public send = <K extends keyof E>(event: K, payload?: E[K]): void => {
     this.atw?.send({
       action: event.toString(),
-      payload,
+      payload: payload ?? ({} as E[K]),
     });
   };
 

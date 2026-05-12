@@ -58,11 +58,11 @@ Events received by this SPA (typed via the SDK in `src/atw.ts`):
 
 Actions this SPA sends back:
 
-| action     | payload                               | handled by native                                           |
-| ---------- | ------------------------------------- | ----------------------------------------------------------- |
-| `ready`    | `{ status: 'ready' }` (once on mount) | flips `SpaWebViewHost` `isReady` and hides the boot spinner |
-| `navigate` | `{ url: '/' \| '/scan' }`             | calls `router.replace(url)`                                 |
-| `settings` | `{ settings: Partial<Settings> }`     | dispatches `updateSettings`                                 |
+| action     | payload                           | handled by native                                           |
+| ---------- | --------------------------------- | ----------------------------------------------------------- |
+| `ready`    | `{}` (once on mount)              | flips `SpaWebViewHost` `isReady` and hides the boot spinner |
+| `navigate` | `{ url: '/' \| '/scan' }`         | calls `router.replace(url)`                                 |
+| `settings` | `{ settings: Partial<Settings> }` | dispatches `updateSettings`                                 |
 
 > The SDK's `ScanPayload.found` is typed as `boolean`; the legacy native
 > bridge still emits it as the string `'true'`/`'false'`. Screens use a

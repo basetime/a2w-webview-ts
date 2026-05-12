@@ -131,6 +131,53 @@ Alternatively, you import the `WebApp` class directly from the CDN:
 </script>
 ```
 
+## React
+
+If your embedded app is built with React, the SDK ships a small set of
+hooks under the optional `/react` subpath. React is declared as an
+**optional peer dependency**, so non-React consumers don't pay any bundle
+cost and don't need to install it.
+
+```bash
+npm install @basetime/a2w-scanner-ts react
+```
+
+```tsx
+import { useEvent, useWebApp } from '@basetime/a2w-scanner-ts/react';
+
+export function ScanScreen() {
+  useEvent('scan', ({ payload }) => {
+    if (!payload.found) {
+      return;
+    }
+    console.log('Scanned pass:', payload.pass);
+  });
+
+  useEvent('standby', () => {
+    console.log('Scanner is idle');
+  });
+
+  // `useWebApp` is only needed if you want to call `send`, check
+  // `isEmbedded`, or otherwise access the instance directly.
+  const webApp = useWebApp();
+  if (!webApp.isEmbedded) {
+    return <p>Open this app inside the atw scanner.</p>;
+  }
+
+  return <p>Waiting for a scan…</p>;
+}
+```
+
+Available hooks:
+
+- `useEvent(event, callback)` subscribes to an event for the lifetime of
+  the component. The callback is captured in a ref, so passing an inline
+  arrow function does **not** cause the listener to re-subscribe on every
+  render.
+- `useWebApp()` returns a stable `WebApp` instance for cases where you need
+  to call `send`, inspect `isEmbedded`, or otherwise interact with the
+  scanner imperatively.
+
 ## Events
 
 The scanner communicates with your embedded app through a small set of events.

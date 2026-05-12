@@ -3,6 +3,30 @@
   "version": "0.1.12",
   "description": "",
   "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js",
+      "require": "./build/index.js",
+      "default": "./build/index.js"
+    },
+    "./react": {
+      "types": "./build/react/index.d.ts",
+      "import": "./build/react/index.js",
+      "require": "./build/react/index.js",
+      "default": "./build/react/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "react": [
+        "./build/react/index.d.ts"
+      ]
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -17,11 +41,20 @@
   "keywords": [],
   "author": "Avagate Inc.",
   "license": "UNLICENSED",
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@jest/types": "^29.6.3",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/jest": "^29.5.12",
     "@types/node": "^17.0.39",
+    "@types/react": "^18.3.0",
     "eslint": "^8.9.0",
     "eslint-config-google": "^0.14.0",
     "eslint-import-resolver-typescript": "^2.7.1",
@@ -29,6 +62,7 @@
     "eslint-plugin-jsdoc": "^48.2.2",
     "fetch-mock": "^11.1.1",
     "jest": "^29.7.0",
+    "react": "^18.3.0",
     "ts-jest": "^29.2.4",
     "typescript": "^5.5.4"
   },

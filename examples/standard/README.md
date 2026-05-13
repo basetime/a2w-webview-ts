@@ -43,6 +43,42 @@ Vite's dev server serves `index.html` for every path (SPA fallback), so
 all three URLs hit the same bundle. `react-router` then renders the
 matching route.
 
+### Proxying the dev server with ngrok
+
+When the scanner is on a different network than your laptop (or you just
+want a stable HTTPS URL the device can hit), point [ngrok](https://ngrok.com)
+at the Vite dev server.
+
+```bash
+pnpm dev                              # leave running on :5173
+ngrok http 5173                       # in another shell
+# or, with a reserved subdomain:
+ngrok http --domain=your-subdomain.ngrok-free.dev 5173
+```
+
+ngrok prints a forwarding URL such as
+`https://your-subdomain.ngrok-free.dev`. Vite blocks unknown hosts by
+default, so add that hostname to `server.allowedHosts` in
+[vite.config.ts](vite.config.ts) (it already lists one ngrok host as an
+example) and restart `pnpm dev`:
+
+```ts
+server: {
+  host: true,
+  port: 5173,
+  allowedHosts: ['localhost', 'your-subdomain.ngrok-free.dev'],
+},
+```
+
+Then use the ngrok URL in place of the LAN URL when configuring the
+scanner's per-screen webview settings:
+
+| Setting              | Value                                                |
+| -------------------- | ---------------------------------------------------- |
+| `webviewStandbyUrl`  | `https://your-subdomain.ngrok-free.dev/standby`      |
+| `webviewScanUrl`     | `https://your-subdomain.ngrok-free.dev/scan`         |
+| `webviewErrorUrl`    | `https://your-subdomain.ngrok-free.dev/error`        |
+
 ## SDK
 
 This example uses the **plain SDK**: it imports `WebApp` from

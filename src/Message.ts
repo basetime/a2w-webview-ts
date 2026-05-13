@@ -336,3 +336,21 @@ export type AppEvents = {
    */
   settings: SettingsPayload;
 };
+
+/**
+ * Runtime list of the SDK's built-in `AppEvents` keys. Used by
+ * `WebApp.on('*', ...)` to fan a wildcard subscription out to each
+ * known event, since the underlying native bridge requires explicit
+ * per-event subscriptions.
+ *
+ * The `satisfies` clause makes the build fail if a future `AppEvents`
+ * key is added without being mirrored here.
+ */
+export const APP_EVENT_NAMES = [
+  'scan',
+  'standby',
+  'error',
+  'navigate',
+  'ready',
+  'settings',
+] as const satisfies readonly (keyof AppEvents)[];

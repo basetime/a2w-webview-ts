@@ -1,6 +1,6 @@
-import type { Message } from './Message';
+import { APP_EVENT_NAMES, type Message } from './Message';
 import WebApp from './WebApp';
 
-export { WebApp };
+export { WebApp, APP_EVENT_NAMES };
 
 export type { Message };

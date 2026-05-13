@@ -11,18 +11,34 @@ import { useWebApp } from './useWebApp';
  * a ref so passing an inline function does not resubscribe on every
  * render; the latest callback is always invoked when the event fires.
  *
- * @param event The event name to listen for.
+ * Pass `'*'` as the event name to subscribe to every built-in
+ * `AppEvents` key (`scan`, `standby`, `error`, `navigate`, `ready`,
+ * `settings`). The callback receives messages whose `action` field is
+ * the actual event name (e.g. `'scan'`), not `'*'`.
+ *
+ * @param event The event name to listen for, or `'*'` for all events.
  * @param callback Invoked with the event message when the event fires.
  */
+export function useEvent<E extends Record<string, unknown> = AppEvents>(
+  event: '*',
+  callback: (message: Message<E, keyof E>) => void,
+): void;
 export function useEvent<
   E extends Record<string, unknown> = AppEvents,
   K extends keyof E = keyof E,
->(event: K, callback: (message: Message<E, K>) => void): void {
+>(event: K, callback: (message: Message<E, K>) => void): void;
+export function useEvent<E extends Record<string, unknown> = AppEvents>(
+  event: '*' | keyof E,
+  callback: (message: Message<E, any>) => void,
+): void {
   const app = useWebApp<E>();
   const callbackRef = useRef(callback);
   callbackRef.current = callback;
 
   useEffect(() => {
+    if (event === '*') {
+      return app.on('*', (message) => callbackRef.current(message));
+    }
     return app.on(event, (message) => callbackRef.current(message));
   }, [app, event]);
 }

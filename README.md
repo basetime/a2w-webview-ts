@@ -189,6 +189,38 @@ All inbound event callbacks receive a message object of the shape
 `{ action, payload }`, where `action` is the event name and `payload` is the
 event-specific data described below.
 
+### Wildcard listener
+
+Pass `'*'` as the event name to subscribe to every built-in event in a single
+call. The callback fires once per event with the actual `action` (e.g.
+`'scan'`), so it's a convenient way to log, debug, or proxy all scanner
+traffic without registering a handler per event:
+
+```typescript
+const off = webApp.on('*', ({ action, payload }) => {
+  console.log('scanner event:', action, payload);
+});
+
+// Later, to unsubscribe:
+off();
+// or equivalently:
+webApp.off('*', callback);
+```
+
+The wildcard covers the SDK's built-in `AppEvents` keys (`scan`, `standby`,
+`error`, `navigate`, `ready`, `settings`); custom event names added via a
+typed `WebApp<E>` are not included.
+
+The same wildcard works in the React hook:
+
+```tsx
+import { useEvent } from '@basetime/a2w-scanner-ts/react';
+
+useEvent('*', ({ action, payload }) => {
+  console.log('scanner event:', action, payload);
+});
+```
+
 ### `scan`
 
 Triggered by the scanner each time it processes a pass scan, regardless of

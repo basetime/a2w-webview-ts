@@ -1,5 +1,5 @@
 import type { Addtowallet } from './Addtowallet';
-import type { AppEvents, Message } from './Message';
+import { APP_EVENT_NAMES, type AppEvents, type Message } from './Message';
 
 /**
  * Provides two way communication with the atw scanner.
@@ -14,6 +14,13 @@ export default class WebApp<E extends Record<string, unknown> = AppEvents> {
    * The atw object.
    */
   private readonly atw?: Addtowallet;
+
+  /**
+   * Tracks the per-event removers created when subscribing via the
+   * wildcard event `'*'`, keyed by the user-supplied callback so that
+   * `off('*', cb)` can find and invoke them.
+   */
+  private readonly wildcardRemovers = new Map<Function, Array<() => void>>();
 
   /**
    * Constructor.
@@ -41,27 +48,63 @@ export default class WebApp<E extends Record<string, unknown> = AppEvents> {
    *
    * Returns a function that removes the event listener.
    *
-   * @param event The event to listen to.
+   * Pass `'*'` as the event name to subscribe to every built-in
+   * `AppEvents` key (`scan`, `standby`, `error`, `navigate`, `ready`,
+   * `settings`). The callback receives messages whose `action` field
+   * is the actual event name (e.g. `'scan'`), not `'*'`.
+   *
+   * @param event The event to listen to, or `'*'` for all events.
    * @param callback The callback to call when a message is received.
    */
-  public on = <K extends keyof E>(
+  public on(event: '*', callback: (message: Message<E, keyof E>) => void): () => void;
+  public on<K extends keyof E>(
     event: K,
     callback: (message: Message<E, K>) => void,
-  ): (() => void) => {
+  ): () => void;
+  public on(
+    event: '*' | keyof E,
+    callback: (message: Message<E, any>) => void,
+  ): () => void {
+    if (event === '*') {
+      const removers = APP_EVENT_NAMES.map((name) =>
+        this.on(name as keyof E, callback as (m: Message<E, keyof E>) => void),
+      );
+      this.wildcardRemovers.set(callback, removers);
+      return () => {
+        removers.forEach((r) => r());
+        this.wildcardRemovers.delete(callback);
+      };
+    }
     this.atw?.on(event.toString(), callback);
-
     return () => {
-      this.off(event, callback);
+      this.off(event as keyof E, callback as (m: Message<E, keyof E>) => void);
     };
-  };
+  }
 
   /**
    * Removes an event listener.
    *
-   * @param event The event to remove.
+   * Pass `'*'` to remove a wildcard listener previously registered via
+   * `on('*', cb)`. If the callback was never registered as a wildcard
+   * listener, this is a no-op.
+   *
+   * @param event The event to remove, or `'*'` for a wildcard listener.
    * @param callback The callback to remove.
    */
-  public off = <K extends keyof E>(event: K, callback: (message: Message<E, K>) => void): void => {
+  public off(event: '*', callback: (message: Message<E, keyof E>) => void): void;
+  public off<K extends keyof E>(event: K, callback: (message: Message<E, K>) => void): void;
+  public off(
+    event: '*' | keyof E,
+    callback: (message: Message<E, any>) => void,
+  ): void {
+    if (event === '*') {
+      const removers = this.wildcardRemovers.get(callback);
+      if (removers) {
+        removers.forEach((r) => r());
+        this.wildcardRemovers.delete(callback);
+      }
+      return;
+    }
     this.atw?.off(event.toString(), callback);
-  };
+  }
 }

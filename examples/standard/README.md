@@ -82,11 +82,14 @@ Screens send navigate / settings messages back to native via
 [src/screens/StandbyScreen.tsx](src/screens/StandbyScreen.tsx) and the debug
 panel in [src/components/DebugPanel.tsx](src/components/DebugPanel.tsx)).
 
-The harness refuses to boot when not embedded: [src/main.tsx](src/main.tsx)
-checks `webApp.isEmbedded` once before mounting React and throws if
-`window.atw` / `window.ReactNativeWebView` aren't present, matching the
-SDK's documented usage. Open these URLs only via the scanner app, not
-in a regular browser tab.
+The harness detects when it isn't embedded: [src/main.tsx](src/main.tsx)
+checks `webApp.isEmbedded` once before mounting the router and renders
+a small "open in the scanner" screen
+([src/screens/NotEmbeddedScreen.tsx](src/screens/NotEmbeddedScreen.tsx))
+when `window.atw` / `window.ReactNativeWebView` aren't present, instead
+of throwing. The routes only mount inside the scanner WebView, so their
+event subscriptions and `ready` sends don't fire from a regular browser
+tab.
 
 Events received by this example (types imported from `@basetime/a2w-webview-ts`):
 

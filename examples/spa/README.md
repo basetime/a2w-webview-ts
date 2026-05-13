@@ -61,11 +61,14 @@ already typed correctly without passing any generic. Provide a custom
 event map (`useEvent<MyEvents, ...>` / `useWebApp<MyEvents>`) only if
 your app extends `AppEvents` with new events.
 
-The SPA refuses to boot when not embedded: `main.tsx` constructs a
-throwaway `new WebApp()` to check `isEmbedded` and throws if `window.atw`
-/ `window.ReactNativeWebView` aren't present, matching the SDK's
-documented usage. Open this URL only via the scanner app, not in a
-regular browser tab.
+The SPA detects when it isn't embedded: `main.tsx` constructs a
+throwaway `new WebApp()` to check `isEmbedded` and renders a small
+"open in the scanner" screen
+([src/screens/NotEmbeddedScreen.tsx](src/screens/NotEmbeddedScreen.tsx))
+when `window.atw` / `window.ReactNativeWebView` aren't present, instead
+of throwing. The main `<App />` only mounts inside the scanner WebView,
+so its event subscriptions and `ready` send don't fire from a regular
+browser tab.
 
 Events received by this SPA (all types come from `@basetime/a2w-webview-ts`):
 

@@ -2,8 +2,8 @@
 
 SDK for embedded apps running inside the atw scanner webview.
 
-See the standard example in [examples/webview-standard](examples/webview-standard).
-See the SPA example in [examples/webview-spa](examples/webview-spa).
+See the standard example in [examples/standard](examples/standard).
+See the SPA example in [examples/spa](examples/spa).
 
 ## Installation
 

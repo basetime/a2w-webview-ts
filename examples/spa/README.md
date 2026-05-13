@@ -1,4 +1,4 @@
-# webview-spa
+# spa
 
 Tiny Vite + React + TypeScript test harness for the persistent SPA webview
 hosted by scanner. It listens for the events the native side

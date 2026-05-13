@@ -1,4 +1,4 @@
-# webview-standard
+# standard
 
 Tiny Vite + React + TypeScript test harness for the **multi-page** webview
 flow hosted by scanner. Each scanner event has its own URL, and the

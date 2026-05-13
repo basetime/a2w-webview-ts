@@ -69,7 +69,7 @@ Alternatively, you import the `WebApp` class directly from the CDN:
 
 ```html
 <script type="module">
-  import WebApp from 'https://cdn.addtowallet.io/js/scanner/v0.1.7/WebApp.js';
+  import WebApp from 'https://cdn.addtowallet.io/js/scanner/v0.2.1/WebApp.js';
 
   const webApp = new WebApp();
 

@@ -1,5 +1,5 @@
-import type { ErrorPayload } from '@basetime/a2w-scanner-ts';
-import { useWebApp } from '@basetime/a2w-scanner-ts/react';
+import type { ErrorPayload } from '@basetime/a2w-webview-ts';
+import { useWebApp } from '@basetime/a2w-webview-ts/react';
 
 interface Props {
   payload: ErrorPayload | null;

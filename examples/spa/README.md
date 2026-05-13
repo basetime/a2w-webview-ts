@@ -24,16 +24,16 @@ per-screen webviews.
 ## SDK
 
 Communication with the native scanner goes through the official
-[`@basetime/a2w-scanner-ts`](https://www.npmjs.com/package/@basetime/a2w-scanner-ts)
+[`@basetime/a2w-webview-ts`](https://www.npmjs.com/package/@basetime/a2w-webview-ts)
 SDK, using its React hook subpath
-[`@basetime/a2w-scanner-ts/react`](https://www.npmjs.com/package/@basetime/a2w-scanner-ts).
+[`@basetime/a2w-webview-ts/react`](https://www.npmjs.com/package/@basetime/a2w-webview-ts).
 This example owns no SDK glue of its own — there's no `atw.ts`, no
 singleton, and no custom event map. Components import the hooks and the
 payload types they need directly from the package.
 
 ```tsx
-import type { StandbyPayload } from '@basetime/a2w-scanner-ts';
-import { useEvent, useWebApp } from '@basetime/a2w-scanner-ts/react';
+import type { StandbyPayload } from '@basetime/a2w-webview-ts';
+import { useEvent, useWebApp } from '@basetime/a2w-webview-ts/react';
 
 useEvent('standby', ({ payload }) => {
   // payload is typed as StandbyPayload | undefined via the SDK's
@@ -67,7 +67,7 @@ throwaway `new WebApp()` to check `isEmbedded` and throws if `window.atw`
 documented usage. Open this URL only via the scanner app, not in a
 regular browser tab.
 
-Events received by this SPA (all types come from `@basetime/a2w-scanner-ts`):
+Events received by this SPA (all types come from `@basetime/a2w-webview-ts`):
 
 | event     | payload type     | fired from                              |
 | --------- | ---------------- | --------------------------------------- |

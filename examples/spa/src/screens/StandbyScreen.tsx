@@ -1,5 +1,5 @@
-import type { StandbyPayload } from '@basetime/a2w-scanner-ts';
-import { useWebApp } from '@basetime/a2w-scanner-ts/react';
+import type { StandbyPayload } from '@basetime/a2w-webview-ts';
+import { useWebApp } from '@basetime/a2w-webview-ts/react';
 
 interface Props {
   payload: StandbyPayload | null;

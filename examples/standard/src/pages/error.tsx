@@ -1,7 +1,7 @@
 import { StrictMode, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import DebugPanel, { type HistoryEntry } from '../components/DebugPanel';
-import type { ErrorPayload } from '@basetime/a2w-scanner-ts';
+import type { ErrorPayload } from '@basetime/a2w-webview-ts';
 import ErrorScreen from '../screens/ErrorScreen';
 import { webApp } from '../atw';
 import '../styles.css';

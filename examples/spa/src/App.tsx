@@ -2,8 +2,8 @@ import type {
   ErrorPayload,
   ScanPayload,
   StandbyPayload,
-} from '@basetime/a2w-scanner-ts';
-import { useEvent, useWebApp } from '@basetime/a2w-scanner-ts/react';
+} from '@basetime/a2w-webview-ts';
+import { useEvent, useWebApp } from '@basetime/a2w-webview-ts/react';
 import { useCallback, useEffect, useState } from 'react';
 import DebugPanel, { type HistoryEntry } from './components/DebugPanel';
 import ErrorScreen from './screens/ErrorScreen';

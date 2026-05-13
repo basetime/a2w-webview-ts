@@ -13,7 +13,7 @@ BUCKET_NAME="cdn.addtowallet.io"
 BUILD_DIR="./build"
 
 # Destination in bucket
-DESTINATION="gs://${BUCKET_NAME}/js/scanner/v${VERSION}/"
+DESTINATION="gs://${BUCKET_NAME}/js/webview/v${VERSION}/"
 
 echo "Uploading build artifacts to $DESTINATION ..."
 

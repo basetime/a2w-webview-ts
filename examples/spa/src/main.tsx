@@ -1,4 +1,4 @@
-import { WebApp } from '@basetime/a2w-scanner-ts';
+import { WebApp } from '@basetime/a2w-webview-ts';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';

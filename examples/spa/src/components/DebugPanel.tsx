@@ -1,4 +1,4 @@
-import { useWebApp } from '@basetime/a2w-scanner-ts/react';
+import { useWebApp } from '@basetime/a2w-webview-ts/react';
 import { useState } from 'react';
 
 export interface HistoryEntry {

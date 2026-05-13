@@ -1,7 +1,7 @@
 import { StrictMode, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import DebugPanel, { type HistoryEntry } from '../components/DebugPanel';
-import type { StandbyPayload } from '@basetime/a2w-scanner-ts';
+import type { StandbyPayload } from '@basetime/a2w-webview-ts';
 import StandbyScreen from '../screens/StandbyScreen';
 import { webApp } from '../atw';
 import '../styles.css';

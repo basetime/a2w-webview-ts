@@ -1,6 +1,6 @@
-# a2w-scanner-ts
+# a2w-webview-ts
 
-SDK for embedded apps running inside the atw scanner webview.
+SDK for webview apps running inside the Addtowallet scanner.
 
 See the standard example in [examples/standard](examples/standard).
 See the SPA example in [examples/spa](examples/spa).
@@ -8,13 +8,13 @@ See the SPA example in [examples/spa](examples/spa).
 ## Installation
 
 ```bash
-npm install @basetime/a2w-scanner-ts
+npm install @basetime/a2w-webview-ts
 ```
 
 ## Usage
 
 ```typescript
-import { WebApp } from '@basetime/a2w-scanner-ts';
+import { WebApp } from '@basetime/a2w-webview-ts';
 
 const webApp = new WebApp();
 
@@ -69,7 +69,7 @@ Alternatively, you import the `WebApp` class directly from the CDN:
 
 ```html
 <script type="module">
-  import WebApp from 'https://cdn.addtowallet.io/js/scanner/v0.2.1/WebApp.js';
+  import WebApp from 'https://cdn.addtowallet.io/js/webview/v0.2.2/WebApp.js';
 
   const webApp = new WebApp();
 
@@ -98,11 +98,11 @@ hooks under the optional `/react` subpath. React is declared as an
 cost and don't need to install it.
 
 ```bash
-npm install @basetime/a2w-scanner-ts react
+npm install @basetime/a2w-webview-ts react
 ```
 
 ```tsx
-import { useEvent, useWebApp } from '@basetime/a2w-scanner-ts/react';
+import { useEvent, useWebApp } from '@basetime/a2w-webview-ts/react';
 
 export function ScanScreen() {
   useEvent('scan', ({ payload }) => {
@@ -131,7 +131,7 @@ Using the wildcard listener, we can listen to all events and navigate to the app
 
 ```tsx
 import React, { useState } from 'react';
-import { useEvent, useWebApp } from '@basetime/a2w-scanner-ts/react';
+import { useEvent, useWebApp } from '@basetime/a2w-webview-ts/react';
 import { ScanScreen, StandbyScreen, ErrorScreen } from './screens';
 
 export function App() {
@@ -205,7 +205,7 @@ typed `WebApp<E>` are not included.
 The same wildcard works in the React hook:
 
 ```tsx
-import { useEvent } from '@basetime/a2w-scanner-ts/react';
+import { useEvent } from '@basetime/a2w-webview-ts/react';
 
 useEvent('*', ({ action, payload }) => {
   console.log('scanner event:', action, payload);

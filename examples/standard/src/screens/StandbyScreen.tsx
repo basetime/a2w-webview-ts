@@ -1,4 +1,4 @@
-import type { StandbyPayload } from '@basetime/a2w-scanner-ts';
+import type { StandbyPayload } from '@basetime/a2w-webview-ts';
 import { webApp } from '../atw';
 
 interface Props {

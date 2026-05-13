@@ -40,7 +40,7 @@ independent entry point.
 ## SDK
 
 This example uses the **plain SDK**: it imports `WebApp` from
-[`@basetime/a2w-scanner-ts`](https://www.npmjs.com/package/@basetime/a2w-scanner-ts)
+[`@basetime/a2w-webview-ts`](https://www.npmjs.com/package/@basetime/a2w-webview-ts)
 directly and does not use the `/react` hook subpath (`useEvent` /
 `useWebApp`). If you want to see the hook-based usage, look at
 [../webview-spa](../webview-spa).
@@ -48,7 +48,7 @@ directly and does not use the `/react` hook subpath (`useEvent` /
 The shared SDK glue in [src/atw.ts](src/atw.ts) is a single line:
 
 ```ts
-import { WebApp } from '@basetime/a2w-scanner-ts';
+import { WebApp } from '@basetime/a2w-webview-ts';
 
 export const webApp = new WebApp();
 ```
@@ -56,10 +56,10 @@ export const webApp = new WebApp();
 The SDK's default `AppEvents` map already covers the `scan`, `standby`,
 `error`, `navigate`, `ready`, and `settings` events, so there's no need
 for a custom event type. Pages and screens import the payload types they
-need straight from `@basetime/a2w-scanner-ts`:
+need straight from `@basetime/a2w-webview-ts`:
 
 ```tsx
-import type { ScanPayload } from '@basetime/a2w-scanner-ts';
+import type { ScanPayload } from '@basetime/a2w-webview-ts';
 import { webApp } from '../atw';
 
 useEffect(() => {
@@ -81,7 +81,7 @@ Each page refuses to boot when not embedded: its `*.tsx` entry checks
 aren't present, matching the SDK's documented usage. Open these URLs only
 via the scanner app, not in a regular browser tab.
 
-Events received by this example (types imported from `@basetime/a2w-scanner-ts`):
+Events received by this example (types imported from `@basetime/a2w-webview-ts`):
 
 | event     | payload type     | page that handles it                                |
 | --------- | ---------------- | --------------------------------------------------- |

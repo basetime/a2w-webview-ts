@@ -1,7 +1,7 @@
 {
-  "name": "@basetime/a2w-scanner-ts",
-  "version": "0.2.1",
-  "description": "",
+  "name": "@basetime/a2w-webview-ts",
+  "version": "0.2.2",
+  "description": "SDK for embedded apps running inside the atw scanner webview.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "sideEffects": false,

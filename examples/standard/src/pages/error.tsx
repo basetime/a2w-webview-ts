@@ -1,21 +1,17 @@
-import { StrictMode, useEffect, useState } from 'react';
-import { createRoot } from 'react-dom/client';
+import { useEffect, useState } from 'react';
 import DebugPanel, { type HistoryEntry } from '../components/DebugPanel';
 import type { ErrorPayload } from '@basetime/a2w-webview-ts';
 import ErrorScreen from '../screens/ErrorScreen';
 import { webApp } from '../atw';
-import '../styles.css';
-
-if (!webApp.isEmbedded) {
-  throw new Error('This app is not embedded in the atw scanner webview.');
-}
 
 /**
- * Page entry for `/error/`. The scanner loads this URL when fetching a
- * pass fails and dispatches a single `error` event. There is no router;
- * the URL itself is the routing decision.
+ * Route component mounted at `/error/`. The scanner navigates the
+ * webview to this URL when fetching a pass fails and dispatches a
+ * single `error` event. `react-router` decides which page component
+ * renders based on the URL, but each page still subscribes to only
+ * its matching event.
  */
-const Page = (): React.ReactElement => {
+const ErrorPage = (): React.ReactElement => {
   const [payload, setPayload] = useState<ErrorPayload | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
 
@@ -45,13 +41,4 @@ const Page = (): React.ReactElement => {
   );
 };
 
-const container = document.getElementById('root');
-if (!container) {
-  throw new Error('Root container missing in error/index.html');
-}
-
-createRoot(container).render(
-  <StrictMode>
-    <Page />
-  </StrictMode>,
-);
+export default ErrorPage;

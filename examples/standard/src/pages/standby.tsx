@@ -1,21 +1,17 @@
-import { StrictMode, useEffect, useState } from 'react';
-import { createRoot } from 'react-dom/client';
+import { useEffect, useState } from 'react';
 import DebugPanel, { type HistoryEntry } from '../components/DebugPanel';
 import type { StandbyPayload } from '@basetime/a2w-webview-ts';
 import StandbyScreen from '../screens/StandbyScreen';
 import { webApp } from '../atw';
-import '../styles.css';
-
-if (!webApp.isEmbedded) {
-  throw new Error('This app is not embedded in the atw scanner webview.');
-}
 
 /**
- * Page entry for `/standby/`. The scanner loads this URL when it enters
- * its idle / home state and dispatches a single `standby` event. There is
- * no router; the URL itself is the routing decision.
+ * Route component mounted at `/standby/`. The scanner navigates the
+ * webview to this URL when it enters its idle / home state and
+ * dispatches a single `standby` event. `react-router` decides which
+ * page component renders based on the URL, but each page still
+ * subscribes to only its matching event.
  */
-const Page = (): React.ReactElement => {
+const StandbyPage = (): React.ReactElement => {
   const [payload, setPayload] = useState<StandbyPayload | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
 
@@ -28,7 +24,6 @@ const Page = (): React.ReactElement => {
       ]);
     });
 
-    // Tell native this page is mounted and ready to receive its event.
     webApp.send('ready', { status: 'ready' });
 
     return () => {
@@ -46,13 +41,4 @@ const Page = (): React.ReactElement => {
   );
 };
 
-const container = document.getElementById('root');
-if (!container) {
-  throw new Error('Root container missing in standby/index.html');
-}
-
-createRoot(container).render(
-  <StrictMode>
-    <Page />
-  </StrictMode>,
-);
+export default StandbyPage;

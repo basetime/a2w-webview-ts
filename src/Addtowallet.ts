@@ -1,4 +1,4 @@
-import type { Message } from './Message';
+import type { Message } from './types';
 
 export interface Addtowallet {
   /**

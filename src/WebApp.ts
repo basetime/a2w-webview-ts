@@ -1,5 +1,5 @@
 import type { Addtowallet } from './Addtowallet';
-import { APP_EVENT_NAMES, type AppEvents, type Message } from './Message';
+import { APP_EVENT_NAMES, type AppEvents, type Message } from './types';
 
 /**
  * Provides two way communication with the atw scanner.

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import type { AppEvents, Message } from '../Message';
+import type { AppEvents, Message } from '../types';
 import { useWebApp } from './useWebApp';
 
 /**

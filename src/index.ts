@@ -1,6 +1,17 @@
-import { APP_EVENT_NAMES, type Message } from './Message';
 import WebApp from './WebApp';
 
-export { WebApp, APP_EVENT_NAMES };
-
-export type { Message };
+export { WebApp };
+export { APP_EVENT_NAMES } from './types';
+export type {
+  AppEvents,
+  ErrorPayload,
+  LogLevel,
+  Message,
+  NavigatePayload,
+  ReadyPayload,
+  ScanPayload,
+  ScannerDeviceInfo,
+  Settings,
+  SettingsPayload,
+  StandbyPayload,
+} from './types';

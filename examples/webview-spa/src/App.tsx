@@ -1,16 +1,15 @@
+import type {
+  ErrorPayload,
+  ScanPayload,
+  StandbyPayload,
+} from '@basetime/a2w-scanner-ts';
+import { useEvent, useWebApp } from '@basetime/a2w-scanner-ts/react';
 import { useCallback, useEffect, useState } from 'react';
 import DebugPanel, { type HistoryEntry } from './components/DebugPanel';
 import ErrorScreen from './screens/ErrorScreen';
 import IdleScreen from './screens/IdleScreen';
 import ScanScreen from './screens/ScanScreen';
 import StandbyScreen from './screens/StandbyScreen';
-import {
-  useWebAppEvent,
-  webAppSend,
-  type ErrorPayload,
-  type ScanPayload,
-  type StandbyPayload,
-} from './atw';
 
 type ActiveEvent = 'idle' | 'standby' | 'scan' | 'error';
 
@@ -44,30 +43,29 @@ const App = (): React.ReactElement => {
     }));
   }, []);
 
-  const handleStandby = useCallback(
-    (payload: StandbyPayload | undefined) => recordEvent('standby', payload),
-    [recordEvent],
-  );
-  const handleScan = useCallback(
-    (payload: ScanPayload | undefined) => recordEvent('scan', payload),
-    [recordEvent],
-  );
-  const handleError = useCallback(
-    (payload: ErrorPayload | undefined) => recordEvent('error', payload),
-    [recordEvent],
-  );
+  useEvent('standby', ({ payload }) => {
+    recordEvent('standby', payload);
+  });
+  useEvent('scan', ({ payload }) => {
+    recordEvent('scan', payload);
+  });
+  useEvent('error', ({ payload }) => {
+    recordEvent('error', payload);
+  });
 
-  useWebAppEvent('standby', handleStandby);
-  useWebAppEvent('scan', handleScan);
-  useWebAppEvent('error', handleError);
+  /**
+   * Stable `WebApp` instance for outbound messages. The hook memoizes the
+   * instance internally, so this is safe to depend on in effects.
+   */
+  const webApp = useWebApp();
 
   /**
    * Notify native that the SPA has finished bootstrapping. The host uses
    * this to hide its global loading spinner.
    */
   useEffect(() => {
-    webAppSend('ready', { status: 'ready' });
-  }, []);
+    webApp.send('ready', { status: 'ready' });
+  }, [webApp]);
 
   let screen: React.ReactElement;
   switch (state.activeEvent) {

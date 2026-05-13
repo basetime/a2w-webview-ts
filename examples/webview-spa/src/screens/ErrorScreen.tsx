@@ -1,4 +1,5 @@
-import { webAppSend, type ErrorPayload } from '../atw';
+import type { ErrorPayload } from '@basetime/a2w-scanner-ts';
+import { useWebApp } from '@basetime/a2w-scanner-ts/react';
 
 interface Props {
   payload: ErrorPayload | null;
@@ -9,6 +10,7 @@ interface Props {
  * payload always includes a human message and an HTTP-style code (or `-1`).
  */
 const ErrorScreen = ({ payload }: Props): React.ReactElement => {
+  const webApp = useWebApp();
   return (
     <section className="screen error">
       <div className="screen__center">
@@ -20,7 +22,7 @@ const ErrorScreen = ({ payload }: Props): React.ReactElement => {
         <button
           className="btn btn--primary"
           type="button"
-          onClick={() => webAppSend('navigate', { url: '/scan' })}
+          onClick={() => webApp.send('navigate', { url: '/scan' })}
         >
           Try again
         </button>

@@ -1,4 +1,5 @@
-import { webAppSend, type ScanPayload } from '../atw';
+import type { ScanPayload } from '@basetime/a2w-scanner-ts';
+import { useWebApp } from '@basetime/a2w-scanner-ts/react';
 
 interface Props {
   payload: ScanPayload | null;
@@ -10,6 +11,7 @@ interface Props {
  * string, so coerce defensively.
  */
 const ScanScreen = ({ payload }: Props): React.ReactElement => {
+  const webApp = useWebApp();
   const pass = payload?.pass ?? null;
   const found = !!payload?.found;
 
@@ -39,7 +41,7 @@ const ScanScreen = ({ payload }: Props): React.ReactElement => {
         <button
           className="btn btn--primary"
           type="button"
-          onClick={() => webAppSend('navigate', { url: '/scan' })}
+          onClick={() => webApp.send('navigate', { url: '/scan' })}
         >
           Scan another
         </button>

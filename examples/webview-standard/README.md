@@ -45,17 +45,23 @@ directly and does not use the `/react` hook subpath (`useEvent` /
 `useWebApp`). If you want to see the hook-based usage, look at
 [../webview-spa](../webview-spa).
 
-The shared SDK glue lives in [src/atw.ts](src/atw.ts):
+The shared SDK glue in [src/atw.ts](src/atw.ts) is a single line:
 
 ```ts
 import { WebApp } from '@basetime/a2w-scanner-ts';
 
-export const webApp = new WebApp<ScannerEvents>();
+export const webApp = new WebApp();
 ```
 
-Each page entry then calls the SDK directly:
+The SDK's default `AppEvents` map already covers the `scan`, `standby`,
+`error`, `navigate`, `ready`, and `settings` events, so there's no need
+for a custom event type. Pages and screens import the payload types they
+need straight from `@basetime/a2w-scanner-ts`:
 
 ```tsx
+import type { ScanPayload } from '@basetime/a2w-scanner-ts';
+import { webApp } from '../atw';
+
 useEffect(() => {
   const off = webApp.on('scan', ({ payload }) => {
     setPayload(payload ?? null);
@@ -75,7 +81,7 @@ Each page refuses to boot when not embedded: its `*.tsx` entry checks
 aren't present, matching the SDK's documented usage. Open these URLs only
 via the scanner app, not in a regular browser tab.
 
-Events received by this example (typed via the SDK in `src/atw.ts`):
+Events received by this example (types imported from `@basetime/a2w-scanner-ts`):
 
 | event     | payload type     | page that handles it                                |
 | --------- | ---------------- | --------------------------------------------------- |

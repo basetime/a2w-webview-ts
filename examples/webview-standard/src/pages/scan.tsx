@@ -1,8 +1,9 @@
 import { StrictMode, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import DebugPanel, { type HistoryEntry } from '../components/DebugPanel';
+import type { ScanPayload } from '@basetime/a2w-scanner-ts';
 import ScanScreen from '../screens/ScanScreen';
-import { webApp, type ScanPayload } from '../atw';
+import { webApp } from '../atw';
 import '../styles.css';
 
 if (!webApp.isEmbedded) {

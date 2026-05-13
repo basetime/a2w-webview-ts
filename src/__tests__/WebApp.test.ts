@@ -12,7 +12,7 @@ import {
   type AppEvents,
   type Message,
   type ScanPayload,
-} from '../Message';
+} from '../types';
 import WebApp from '../WebApp';
 
 /**

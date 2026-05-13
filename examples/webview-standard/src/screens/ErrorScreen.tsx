@@ -1,4 +1,5 @@
-import { webApp, type ErrorPayload } from '../atw';
+import type { ErrorPayload } from '@basetime/a2w-scanner-ts';
+import { webApp } from '../atw';
 
 interface Props {
   payload: ErrorPayload | null;

@@ -25,32 +25,49 @@ per-screen webviews.
 
 Communication with the native scanner goes through the official
 [`@basetime/a2w-scanner-ts`](https://www.npmjs.com/package/@basetime/a2w-scanner-ts)
-SDK. A singleton `WebApp` is created in [`src/atw.ts`](src/atw.ts):
+SDK, using its React hook subpath
+[`@basetime/a2w-scanner-ts/react`](https://www.npmjs.com/package/@basetime/a2w-scanner-ts).
+This example owns no SDK glue of its own — there's no `atw.ts`, no
+singleton, and no custom event map. Components import the hooks and the
+payload types they need directly from the package.
 
-```ts
-import { useWebAppEvent, webAppSend } from './atw';
+```tsx
+import type { StandbyPayload } from '@basetime/a2w-scanner-ts';
+import { useEvent, useWebApp } from '@basetime/a2w-scanner-ts/react';
 
-useWebAppEvent('standby', (payload) => {
-  // payload is typed as StandbyPayload | undefined
+useEvent('standby', ({ payload }) => {
+  // payload is typed as StandbyPayload | undefined via the SDK's
+  // default AppEvents map.
 });
 
-webAppSend('navigate', { url: '/scan' });
+const webApp = useWebApp();
+webApp.send('navigate', { url: '/scan' });
 ```
 
 Under the hood:
 
-- `useWebAppEvent(event, cb)` subscribes via `webApp.on(event, cb)` and
-  removes the listener on unmount. The callback receives the unwrapped
-  `payload` from the SDK's `Message<E, K>`.
-- `webAppSend(action, payload)` calls `webApp.send(action, payload)`,
-  which serializes as `{ action, payload }` for the native side.
+- `useEvent(event, cb)` subscribes via `WebApp.on(event, cb)` for the
+  lifetime of the component and unsubscribes on unmount. The callback is
+  held in a ref so passing an inline function does not re-subscribe on
+  every render. The callback receives the full SDK `Message<E, K>`
+  (`{ action, payload }`); destructure `payload` if you only need the
+  body.
+- `useWebApp()` returns a memoized `WebApp` instance that's stable across
+  renders, so `webApp.send(...)` can be called from event handlers or
+  effects without thrashing the native bridge.
 
-The SPA refuses to boot when not embedded: `main.tsx` checks
-`webApp.isEmbedded` and throws if `window.atw` / `window.ReactNativeWebView`
-aren't present, matching the SDK's documented usage. Open this URL only via
-the scanner app, not in a regular browser tab.
+Both hooks default to the SDK's built-in `AppEvents` map, so `payload` is
+already typed correctly without passing any generic. Provide a custom
+event map (`useEvent<MyEvents, ...>` / `useWebApp<MyEvents>`) only if
+your app extends `AppEvents` with new events.
 
-Events received by this SPA (typed via the SDK in `src/atw.ts`):
+The SPA refuses to boot when not embedded: `main.tsx` constructs a
+throwaway `new WebApp()` to check `isEmbedded` and throws if `window.atw`
+/ `window.ReactNativeWebView` aren't present, matching the SDK's
+documented usage. Open this URL only via the scanner app, not in a
+regular browser tab.
+
+Events received by this SPA (all types come from `@basetime/a2w-scanner-ts`):
 
 | event     | payload type     | fired from                              |
 | --------- | ---------------- | --------------------------------------- |

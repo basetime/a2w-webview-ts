@@ -1,5 +1,5 @@
+import { useWebApp } from '@basetime/a2w-scanner-ts/react';
 import { useState } from 'react';
-import { webAppSend } from '../atw';
 
 export interface HistoryEntry {
   event: string;
@@ -36,6 +36,7 @@ const DebugPanel = ({
   history,
 }: Props): React.ReactElement => {
   const [open, setOpen] = useState(false);
+  const webApp = useWebApp();
 
   return (
     <aside className={`debug ${open ? 'debug--open' : 'debug--closed'}`}>
@@ -59,20 +60,20 @@ const DebugPanel = ({
             <div className="debug__buttons">
               <button
                 type="button"
-                onClick={() => webAppSend('navigate', { url: '/' })}
+                onClick={() => webApp.send('navigate', { url: '/' })}
               >
                 navigate /
               </button>
               <button
                 type="button"
-                onClick={() => webAppSend('navigate', { url: '/scan' })}
+                onClick={() => webApp.send('navigate', { url: '/scan' })}
               >
                 navigate /scan
               </button>
               <button
                 type="button"
                 onClick={() =>
-                  webAppSend('settings', {
+                  webApp.send('settings', {
                     settings: { debugWebviews: true },
                   })
                 }
@@ -81,7 +82,7 @@ const DebugPanel = ({
               </button>
               <button
                 type="button"
-                onClick={() => webAppSend('ready', { status: 'ready' })}
+                onClick={() => webApp.send('ready', { status: 'ready' })}
               >
                 resend ready
               </button>

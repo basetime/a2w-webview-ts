@@ -1,4 +1,5 @@
-import { webAppSend, type StandbyPayload } from '../atw';
+import type { StandbyPayload } from '@basetime/a2w-scanner-ts';
+import { useWebApp } from '@basetime/a2w-scanner-ts/react';
 
 interface Props {
   payload: StandbyPayload | null;
@@ -9,6 +10,7 @@ interface Props {
  * and ready to scan a pass.
  */
 const StandbyScreen = ({ payload }: Props): React.ReactElement => {
+  const webApp = useWebApp();
   return (
     <section className="screen standby">
       <div className="screen__center">
@@ -19,7 +21,7 @@ const StandbyScreen = ({ payload }: Props): React.ReactElement => {
         <button
           className="btn btn--primary"
           type="button"
-          onClick={() => webAppSend('navigate', { url: '/scan' })}
+          onClick={() => webApp.send('navigate', { url: '/scan' })}
         >
           Open camera
         </button>

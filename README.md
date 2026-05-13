@@ -2,6 +2,9 @@
 
 SDK for embedded apps running inside the atw scanner webview.
 
+See the standard example in [examples/webview-standard](examples/webview-standard).
+See the SPA example in [examples/webview-spa](examples/webview-spa).
+
 ## Installation
 
 ```bash
@@ -21,22 +24,6 @@ if (!webApp.isEmbedded) {
 }
 
 // Listen for scan events from the scanner.
-// The message object contains the following properties:
-// - `scanner`: The scanner id.
-// - `settings`: The settings associated with the scanner.
-// - `tags`: The tags associated with the scanner app.
-// - `location`: The location of the scanner.
-// - `found`: Whether the pass was found or not. Value will be `true` or `false`.
-// - `pass`: The entire pass object, which contains the campaign.
-// - `password`: The password if one was set in the Addtowallet app.
-// - `webviewHeight`: The height of the webview.
-// - `webviewWidth`: The width of the webview.
-// - `device`: {
-// -    manufacturer: e.g. "Google", "xiaomi", "Apple", "Google", null
-// -    model: e.g. "Pixel 2", "iPhone XS Max", "iPhone", null
-// -    osVersion: e.g. "4.0.3", "12.3.1", "11.0", "8.1.0"
-// -    deviceName: e.g. name of the phone, "Vivian's iPhone XS"
-// - }
 webApp.on('scan', ({ payload }) => {
   console.log(payload);
 
@@ -58,19 +45,6 @@ webApp.on('scan', ({ payload }) => {
 });
 
 // Triggered when the scanner is on the home screen.
-// The message object contains the following properties:
-// - `scanner`: The scanner id.
-// - `settings`: The settings associated with the scanner.
-// - `password`: The password if one was set in the Addtowallet app.
-// - `location`: The location of the scanner.
-// - `webviewHeight`: The height of the webview.
-// - `webviewWidth`: The width of the webview.
-// - `device`: {
-// -    manufacturer: e.g. "Google", "xiaomi", "Apple", "Google", null
-// -    model: e.g. "Pixel 2", "iPhone XS Max", "iPhone", null
-// -    osVersion: e.g. "4.0.3", "12.3.1", "11.0", "8.1.0"
-// -    deviceName: e.g. name of the phone, "Vivian's iPhone XS"
-// - }
 webApp.on('standby', ({ payload }) => {
   console.log(payload);
   console.log('The scanner is in standby mode.');
@@ -85,21 +59,6 @@ webApp.on('standby', ({ payload }) => {
 });
 
 // Triggered when an error is encountered in the scanner. For example,
-// if a pass or campaign is not found.
-// - `scanner`: The scanner id.
-// - `settings`: The settings associated with the scanner.
-// - `password`: The password if one was set in the Addtowallet app.
-// - `location`: The location of the scanner.
-// - `webviewHeight`: The height of the webview.
-// - `webviewWidth`: The width of the webview.
-// - `errorCode`: A representation of the error, e.g. 404
-// - `errorMessage`: A string representation of the error, e.g. "Campaign not found"
-// - `device`: {
-// -    manufacturer: e.g. "Google", "xiaomi", "Apple", "Google", null
-// -    model: e.g. "Pixel 2", "iPhone XS Max", "iPhone", null
-// -    osVersion: e.g. "4.0.3", "12.3.1", "11.0", "8.1.0"
-// -    deviceName: e.g. name of the phone, "Vivian's iPhone XS"
-// - }
 webApp.on('error', ({ payload }) => {
   console.log(payload.errorCode);
   console.log(payload.errorMessage);

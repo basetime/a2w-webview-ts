@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type { AppEvents } from '../Message';
+import type { AppEvents } from '../types';
 import WebApp from '../WebApp';
 
 /**

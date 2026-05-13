@@ -1,6 +1,6 @@
 {
   "name": "@basetime/a2w-webview-ts",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "SDK for webview apps running inside the Addtowallet scanner.",
   "main": "build/index.js",
   "types": "build/index.d.ts",

@@ -31,14 +31,21 @@ export function useEvent<E extends Record<string, unknown> = AppEvents>(
   event: '*' | keyof E,
   callback: (message: Message<E, any>) => void,
 ): void {
+  /**
+   * A stable `WebApp` instance.
+   */
   const app = useWebApp<E>();
+
+  /**
+   * A ref to the callback function.
+   */
   const callbackRef = useRef(callback);
   callbackRef.current = callback;
 
+  /**
+   * Subscribes to the event and invokes the callback when the event fires.
+   */
   useEffect(() => {
-    if (event === '*') {
-      return app.on('*', (message) => callbackRef.current(message));
-    }
     return app.on(event, (message) => callbackRef.current(message));
   }, [app, event]);
 }

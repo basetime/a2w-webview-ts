@@ -168,6 +168,38 @@ export function ScanScreen() {
 }
 ```
 
+Using the wildcard listener, we can listen to all events and navigate to the appropriate screen based on the event.
+
+```tsx
+import React, { useState } from 'react';
+import { useEvent, useWebApp } from '@basetime/a2w-scanner-ts/react';
+import { ScanScreen, StandbyScreen, ErrorScreen } from './screens';
+
+export function App() {
+  const [page, setPage] = useState<'scan' | 'standby' | 'error'>('scan');
+
+  useEvent('*', ({ action, payload }) => {
+    if (action === 'scan') {
+      setPage('scan');
+    } else if (action === 'standby') {
+      setPage('standby');
+    } else if (action === 'error') {
+      setPage('error');
+    }
+  });
+
+  if (page === 'scan') {
+    return <ScanScreen />;
+  } else if (page === 'standby') {
+    return <StandbyScreen />;
+  } else if (page === 'error') {
+    return <ErrorScreen />;
+  }
+
+  return <p>Waiting for a scan…</p>;
+}
+```
+
 Available hooks:
 
 - `useEvent(event, callback)` subscribes to an event for the lifetime of

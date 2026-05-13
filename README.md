@@ -341,6 +341,7 @@ webApp.send('settings', {
 - `brandColor` (`string`): The brand color used by the scanner UI.
 - `brandLogoUrl` (`string`): The URL of the brand logo.
 - `tags` (`string[]`): The tags associated with the scanner.
+- `webviewSpaUrl` (`string`): The URL displayed in the SPA webview.
 - `webviewScanUrl` (`string`): The URL displayed in the scan webview.
 - `webviewStandbyUrl` (`string`): The URL displayed in the standby webview.
 - `webviewErrorUrl` (`string`): The URL displayed in the error webview.

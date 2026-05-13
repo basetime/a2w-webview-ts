@@ -10,7 +10,7 @@
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
-    "@basetime/a2w-webview-ts": "^0.2.2",
+    "@basetime/a2w-webview-ts": "^0.2.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

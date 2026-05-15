@@ -14,13 +14,13 @@ name: Release
 #                       --iam-account=<sa>@<project>.iam.gserviceaccount.com
 #
 # Notes:
-#   - pnpm version is pinned via `version:` because package.json has no
-#     `packageManager` field. Add `"packageManager": "pnpm@10.x.y"` to
-#     package.json to remove the pin.
-#   - `--provenance` is NOT used because package.json has no `repository`
-#     field. To enable provenance later: add `"repository": { "type": "git",
-#     "url": "git+https://github.com/basetime/a2w-webview-ts.git" }` and
-#     re-add `--provenance` to the publish step.
+#   - pnpm version is read from package.json's `packageManager` field.
+#   - `--provenance` is NOT used: package.json's `repository.url` points at
+#     `avagate/a2w-webview-ts` but the actual remote is
+#     `basetime/a2w-webview-ts`. npm provenance verification compares those
+#     two and rejects the publish with E422 if they don't match. To enable
+#     provenance later, align the two URLs (update package.json's repository
+#     field) and add `--provenance` to the publish step.
 
 on:
   workflow_dispatch:
@@ -51,8 +51,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Setup Node
         uses: actions/setup-node@v4

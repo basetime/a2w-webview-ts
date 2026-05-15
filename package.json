@@ -30,13 +30,21 @@
   "publishConfig": {
     "access": "public"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/avagate/a2w-webview-ts.git"
+  },
   "scripts": {
+    "prepare": "git config --local core.hooksPath .githooks 2>/dev/null || true",
     "clean": "rm -rf build",
     "build": "pnpm tsc",
     "watch": "pnpm tsc --watch --preserveWatchOutput",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "postpublish": "pnpm build && ./upload-build.sh"
+    "postpublish": "pnpm build && ./upload-build.sh",
+    "release:patch": "gh workflow run Release --ref main -f release_type=patch",
+    "release:minor": "gh workflow run Release --ref main -f release_type=minor",
+    "release:major": "gh workflow run Release --ref main -f release_type=major"
   },
   "keywords": [],
   "author": "Avagate Inc.",
@@ -49,6 +57,7 @@
       "optional": true
     }
   },
+  "packageManager": "pnpm@9.15.4",
   "devDependencies": {
     "@jest/types": "^29.6.3",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",

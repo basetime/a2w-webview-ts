@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Update .gitignore to include GCP service-account credentials and modify package.json to specify files for publishing.. (`e04e98d`)
+
 ## 0.2.5 - 2026-05-18
 
 - Enhance ScanPayload interface by adding barcode property and updating pass type to allow null values for non-a2w barcodes.. (`b63f4b6`)

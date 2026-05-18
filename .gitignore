@@ -2,3 +2,11 @@ build/
 node_modules/
 tsconfig.tsbuildinfo
 build/.tsbuildinfo
+
+# GCP service-account credentials. `google-github-actions/auth@v2` writes these
+# into the workspace root by default; if they leak into the npm tarball, Google
+# auto-disables the key (see release.yml history). Never commit or publish.
+gha-creds-*.json
+key.json
+*.key.json
+service-account*.json

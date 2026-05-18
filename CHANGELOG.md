@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.2.6 - 2026-05-18
+
 - Update .gitignore to include GCP service-account credentials and modify package.json to specify files for publishing.. (`e04e98d`)
 
 ## 0.2.5 - 2026-05-18

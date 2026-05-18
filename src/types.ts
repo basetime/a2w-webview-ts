@@ -43,6 +43,11 @@ export interface ScanPayload {
   scanner: string;
 
   /**
+   * The barcode of the scanned pass.
+   */
+  barcode: string;
+
+  /**
    * The location of the device as "latitude,longitude".
    */
   location: string;
@@ -64,8 +69,10 @@ export interface ScanPayload {
 
   /**
    * The pass object.
+   * 
+   * Will be null when a non-a2w barcode was scanned.
    */
-  pass: Pass;
+  pass: Pass | null;
 
   /**
    * The tags associated with the scanner.

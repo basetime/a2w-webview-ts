@@ -233,6 +233,8 @@ webApp.on('scan', ({ payload }) => {
 `payload` (`ScanPayload`) properties:
 
 - `scanner` (`string`): The ID of the scanner that produced the event.
+- `barcode` (`string`): The barcode of the scanned pass.
+- `isA2w` (`boolean`): Whether the scanned pass is an A2W pass.
 - `location` (`string`): The device location as `"latitude,longitude"`.
 - `found` (`boolean`): Whether the scanned pass was found in the system.
 - `pass` (`Pass`): The full pass object, including its associated campaign.

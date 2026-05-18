@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Update README to include new properties in ScanPayload interface and upgrade @basetime/a2w-webview-ts dependency to version 0.2.6 in SPA and standard examples.. (`323e0d6`)
+
 ## 0.2.6 - 2026-05-18
 
 - Update .gitignore to include GCP service-account credentials and modify package.json to specify files for publishing.. (`e04e98d`)

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@basetime/a2w-webview-ts':
-        specifier: ^1.0.0
-        version: 1.0.0(react@19.2.6)
+        specifier: 1.0.1
+        version: 1.0.1(react@19.2.6)
       react:
         specifier: ^19.1.0
         version: 19.2.6
@@ -126,8 +126,8 @@ packages:
     resolution: {integrity: sha512-TgKHHdYlK8GpL5mm+nTCMEIh1c8dVWigj+59xhknSFTGhncBJnf+w5MlyZPT2Y6ByYEJQEEE/8y2luu3gVo9vA==}
     engines: {node: '>=18'}
 
-  '@basetime/a2w-webview-ts@1.0.0':
-    resolution: {integrity: sha512-JupZiwqvSsIvrBkVILlWorXu0oerv145f6XPxI9uBx2yrcYykXJq6+7Fh7/WwEGBSB8YtIRk3HFiD4Y3MSLMsQ==}
+  '@basetime/a2w-webview-ts@1.0.1':
+    resolution: {integrity: sha512-M36zUoPHBDrVW25eXWfG4+fLnufHYgGzCntDGn6i8Vw2TIqN4VvWZN6YZNalyCRNK5d046AmJiT5Om/chua/Bg==}
     peerDependencies:
       react: '>=16.8.0'
     peerDependenciesMeta:
@@ -813,7 +813,7 @@ snapshots:
     dependencies:
       passkit-generator: 3.5.7
 
-  '@basetime/a2w-webview-ts@1.0.0(react@19.2.6)':
+  '@basetime/a2w-webview-ts@1.0.1(react@19.2.6)':
     dependencies:
       '@basetime/a2w-api-ts': 0.1.72
     optionalDependencies:

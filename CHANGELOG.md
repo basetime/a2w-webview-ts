@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Update @basetime/a2w-webview-ts dependency to version 1.0.0 in SPA and standard examples, and adjust pnpm-lock.yaml accordingly.. (`26ddeaa`)
+
 ## 1.0.0 - 2026-05-20
 
 - Refactor release workflow to publish before committing and tagging, ensuring main branch remains untouched on publish failure. Update @basetime/a2w-webview-ts dependency to version 1.0.1 in SPA and standard examples.. (`5781a2d`)

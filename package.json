@@ -34,6 +34,7 @@
     "build",
     "README.md",
     "CHANGELOG.md",
+    "MIGRATION.md",
     "package.json"
   ],
   "repository": {

@@ -5,6 +5,9 @@ SDK for webview apps running inside the Addtowallet scanner.
 See the standard example in [examples/standard](examples/standard).
 See the SPA example in [examples/spa](examples/spa).
 
+Upgrading from `0.x`? See [MIGRATION.md](MIGRATION.md) for the
+v0.2.7 → v1.0.0 upgrade notes.
+
 ## Installation
 
 ```bash

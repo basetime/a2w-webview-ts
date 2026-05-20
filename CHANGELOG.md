@@ -3,6 +3,9 @@
 ## Unreleased
 
 - Refactor release workflow to publish before committing and tagging, ensuring main branch remains untouched on publish failure. Update @basetime/a2w-webview-ts dependency to version 1.0.1 in SPA and standard examples.. (`5781a2d`)
+
+## 1.0.0 - 2026-05-20
+
 - See [MIGRATION.md](MIGRATION.md) for the v0.2.7 → v1.0.0 upgrade notes covering everything below.
 - Add synthetic `boot` event (`AppEvents['boot']`, payload `{ isEmbedded }`) that fires once per `WebApp` instance after the SDK has resolved native-bridge availability, with replay semantics for late subscribers. Recommended replacement for the synchronous `isEmbedded` getter, which is now `@deprecated`.
 - Queue `webApp.send(...)` calls that arrive before the native bridge is injected; flush them in order once the bridge appears.

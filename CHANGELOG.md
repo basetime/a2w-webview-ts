@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Update MIGRATION.md to reflect changes in event map and build target version, renumbering sections accordingly.. (`aa0045a`)
 - Update @basetime/a2w-webview-ts dependency to version 1.0.1 in SPA and standard examples, and synchronize pnpm-lock.yaml files.. (`fadfdbc`)
 
 ## 1.0.1 - 2026-05-20

@@ -201,33 +201,7 @@ information you can already react to.
 
 ---
 
-## 6. `AppEvents` gained a `boot` key
-
-The built-in event map exported as `AppEvents` now includes a `boot`
-key. This is additive but worth checking if you maintain a custom
-event map via the generic `WebApp<MyEvents>` parameter:
-
-```typescript
-interface MyEvents extends Record<string, unknown> {
-  boot: BootPayload; // optional but recommended so `on('boot', ...)` is typed
-  myCustomEvent: { ... };
-}
-
-const app = new WebApp<MyEvents>();
-```
-
-If your custom map does **not** declare `boot`, then `app.on('boot', ...)`
-will be a type error. The SDK still emits `boot` at runtime because the
-behavior is independent of the type parameter — declare the key on
-your event map to access it through the typed API.
-
-The runtime constant `APP_EVENT_NAMES` intentionally **excludes**
-`'boot'` (see [§1 Notes](#notes)). Code that iterates `APP_EVENT_NAMES`
-will continue to see only the six native bridge events.
-
----
-
-## 7. Build target moved from `esnext` to `es2018`
+## 6. Build target moved from `esnext` to `es2018`
 
 The package's published JavaScript now targets ES2018 (was `esnext`).
 This was a deliberate compatibility change for older Android WebView
@@ -237,7 +211,7 @@ it if you ship raw, un-bundled SDK code to constrained runtimes.
 
 ---
 
-## 8. Removed / breaking changes
+## 7. Removed / breaking changes
 
 **None.** v1.0.0 contains no removals and no breaking type changes
 relative to v0.2.7. The version bump reflects the SDK's commitment to

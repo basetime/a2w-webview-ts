@@ -1,5 +1,5 @@
-import { WebApp } from '@basetime/a2w-webview-ts';
-import { StrictMode } from 'react';
+import { useEvent } from '@basetime/a2w-webview-ts/react';
+import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import NotEmbeddedScreen from './screens/NotEmbeddedScreen';
@@ -10,13 +10,32 @@ if (!container) {
   throw new Error('Root container missing in index.html');
 }
 
-// Render a friendly message when not embedded in the scanner WebView
-// (e.g. opened in a regular browser tab) instead of throwing. The React
-// tree gets its own memoized `WebApp` instance via `useWebApp()` inside
-// components, so the one constructed here is only used for the
-// `isEmbedded` probe.
-const isEmbedded = new WebApp().isEmbedded;
+/**
+ * Bootstraps the SPA based on whether the native bridge is available.
+ *
+ * We subscribe to the synthetic `boot` event rather than reading the
+ * deprecated `isEmbedded` getter synchronously, because on older
+ * Android WebView runtimes `window.atw` can be injected after this
+ * module evaluates. The `boot` event fires once the SDK has finished
+ * waiting for the bridge (or has timed out).
+ *
+ * Returning `null` while the bridge state is undetermined keeps the
+ * page blank for at most one polling interval; in the embedded case
+ * the bridge is normally already present at module evaluation time
+ * and `boot` fires asynchronously on the very next tick.
+ */
+function Bootstrap(): React.ReactElement | null {
+  const [isEmbedded, setIsEmbedded] = useState<boolean | null>(null);
+  useEvent('boot', ({ payload }) => setIsEmbedded(payload.isEmbedded));
+
+  if (isEmbedded === null) {
+    return null;
+  }
+  return isEmbedded ? <App /> : <NotEmbeddedScreen />;
+}
 
 createRoot(container).render(
-  <StrictMode>{isEmbedded ? <App /> : <NotEmbeddedScreen />}</StrictMode>,
+  <StrictMode>
+    <Bootstrap />
+  </StrictMode>,
 );

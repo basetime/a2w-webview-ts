@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add synthetic `boot` event (`AppEvents['boot']`, payload `{ isEmbedded }`) that fires once per `WebApp` instance after the SDK has resolved native-bridge availability, with replay semantics for late subscribers. Recommended replacement for the synchronous `isEmbedded` getter, which is now `@deprecated`.
+- Queue `webApp.send(...)` calls that arrive before the native bridge is injected; flush them in order once the bridge appears.
+- Make `webApp.off(event, cb)` cancel a still-pending subscription that hasn't been attached to the bridge yet (previously was a silent no-op).
+- Emit a single `console.warn` when the SDK times out waiting for `window.atw` to appear (10s), reporting the number of dropped queued messages and pending subscriptions. The `boot` event also fires at that point with `isEmbedded: false`.
+- Refactor `WebApp` to a single shared bridge-readiness state machine instead of per-subscription polling loops, eliminating the N concurrent timers previously created by wildcard subscriptions.
+- Update the SPA and standard examples to bootstrap via the `boot` event instead of the deprecated synchronous `isEmbedded` check. Examples will type-check cleanly once their pinned `@basetime/a2w-webview-ts` dependency is bumped to a release that includes this change.
+
 ## 0.2.7 - 2026-05-18
 
 - Update README to include new properties in ScanPayload interface and upgrade @basetime/a2w-webview-ts dependency to version 0.2.6 in SPA and standard examples.. (`323e0d6`)

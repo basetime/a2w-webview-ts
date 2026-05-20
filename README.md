@@ -18,10 +18,15 @@ import { WebApp } from '@basetime/a2w-webview-ts';
 
 const webApp = new WebApp();
 
-// Check if the app is embedded in the atw scanner webview.
-if (!webApp.isEmbedded) {
-  throw new Error('This app is not embedded in the atw scanner webview.');
-}
+// Wait for the SDK to determine whether the native bridge is
+// available, then decide whether to render the embedded UI. The
+// `boot` event fires exactly once per `WebApp` instance and is
+// replayed for subscribers that register late.
+webApp.on('boot', ({ payload }) => {
+  if (!payload.isEmbedded) {
+    throw new Error('This app is not embedded in the atw scanner webview.');
+  }
+});
 
 // Listen for scan events from the scanner.
 webApp.on('scan', ({ payload }) => {
@@ -116,10 +121,21 @@ export function ScanScreen() {
     console.log('Scanner is idle');
   });
 
-  // `useWebApp` is only needed if you want to call `send`, check
-  // `isEmbedded`, or otherwise access the instance directly.
+  // `useWebApp` is only needed if you want to call `send` or
+  // otherwise access the instance directly.
   const webApp = useWebApp();
-  if (!webApp.isEmbedded) {
+
+  // Use the `boot` event to decide what to render once the SDK has
+  // resolved whether the native bridge is available. On older Android
+  // WebView runtimes the bridge can be injected after `WebApp` is
+  // constructed, so a synchronous `isEmbedded` check is unreliable.
+  const [isEmbedded, setIsEmbedded] = useState<boolean | null>(null);
+  useEvent('boot', ({ payload }) => setIsEmbedded(payload.isEmbedded));
+
+  if (isEmbedded === null) {
+    return <p>Loading…</p>;
+  }
+  if (!isEmbedded) {
     return <p>Open this app inside the atw scanner.</p>;
   }
 
@@ -166,8 +182,11 @@ Available hooks:
   arrow function does **not** cause the listener to re-subscribe on every
   render.
 - `useWebApp()` returns a stable `WebApp` instance for cases where you need
-  to call `send`, inspect `isEmbedded`, or otherwise interact with the
-  scanner imperatively.
+  to call `send` or otherwise interact with the scanner imperatively.
+  Prefer subscribing to the `boot` event (via `useEvent('boot', ...)`)
+  over reading the deprecated `isEmbedded` getter, since the native
+  bridge can be injected after construction on older Android WebView
+  runtimes.
 
 ## Events
 
@@ -198,9 +217,10 @@ off();
 webApp.off('*', callback);
 ```
 
-The wildcard covers the SDK's built-in `AppEvents` keys (`scan`, `standby`,
-`error`, `navigate`, `ready`, `settings`); custom event names added via a
-typed `WebApp<E>` are not included.
+The wildcard covers the SDK's built-in native `AppEvents` keys (`scan`,
+`standby`, `error`, `navigate`, `ready`, `settings`); the synthetic
+`boot` event and custom event names added via a typed `WebApp<E>` are
+not included.
 
 The same wildcard works in the React hook:
 
@@ -211,6 +231,44 @@ useEvent('*', ({ action, payload }) => {
   console.log('scanner event:', action, payload);
 });
 ```
+
+### `boot`
+
+A **synthetic** event emitted by the SDK itself (not by the native
+bridge) once it has determined whether `window.atw` is or will become
+available. Fires exactly once per `WebApp` instance. Subscribers that
+register after the event has already fired receive the cached payload
+asynchronously, so it is safe to subscribe at any time.
+
+`boot` is **not** included in the `'*'` wildcard fan-out because it
+does not correspond to a real native event.
+
+Use `boot` instead of the deprecated synchronous `isEmbedded` getter
+when gating your UI on whether the app is embedded — on older Android
+WebView runtimes the native bridge can be injected after `WebApp` is
+constructed, which makes a synchronous check unreliable.
+
+```typescript
+webApp.on('boot', ({ payload }) => {
+  if (!payload.isEmbedded) {
+    // render a "not embedded" UI
+    return;
+  }
+  // proceed with the embedded UI
+});
+```
+
+`payload` (`BootPayload`) properties:
+
+- `isEmbedded` (`boolean`): Whether the app is embedded inside the atw
+  scanner webview, i.e. whether the native bridge is available.
+
+While the SDK is waiting for the bridge, calls to `webApp.send(...)`
+are queued and flushed in order once the bridge appears; calls to
+`webApp.on(nativeEvent, ...)` are likewise queued and attached on
+arrival. If the bridge never appears within 10 seconds the SDK emits
+`boot` with `isEmbedded: false`, logs a `console.warn`, and drops any
+queued messages or pending subscriptions.
 
 ### `scan`
 

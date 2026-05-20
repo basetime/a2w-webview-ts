@@ -205,6 +205,22 @@ export interface ReadyPayload {
   status?: string;
 }
 
+/**
+ * Payload for the synthetic 'boot' event.
+ *
+ * The `boot` event is emitted by the SDK itself (not by the native
+ * bridge) once it has determined whether `window.atw` is or will become
+ * available. It fires exactly once per `WebApp` instance and is
+ * replayed for listeners that subscribe after it has already fired.
+ */
+export interface BootPayload {
+  /**
+   * Whether the app is embedded inside the atw scanner webview, i.e.
+   * whether the native bridge (`window.atw`) is available.
+   */
+  isEmbedded: boolean;
+}
+
 export type LogLevel = 'debug' | 'info' | 'error';
 
 /**
@@ -314,6 +330,18 @@ export type Message<E extends Record<string, unknown>, K extends keyof E> = {
  */
 export type AppEvents = {
   /**
+   * Synthetic, SDK-emitted event that fires once per `WebApp` instance
+   * after the native bridge readiness has been resolved (either the
+   * bridge appeared, or the SDK timed out waiting for it). Subscribers
+   * registered after the event has already fired receive the cached
+   * payload via microtask.
+   *
+   * Unlike the native bridge events, `boot` is **not** included in the
+   * `'*'` wildcard fan-out.
+   */
+  boot: BootPayload;
+
+  /**
    * Triggered when the scanner scans a pass.
    */
   scan: ScanPayload;
@@ -345,13 +373,14 @@ export type AppEvents = {
 };
 
 /**
- * Runtime list of the SDK's built-in `AppEvents` keys. Used by
+ * Runtime list of the SDK's built-in *native* `AppEvents` keys. Used by
  * `WebApp.on('*', ...)` to fan a wildcard subscription out to each
  * known event, since the underlying native bridge requires explicit
  * per-event subscriptions.
  *
- * The `satisfies` clause makes the build fail if a future `AppEvents`
- * key is added without being mirrored here.
+ * The synthetic `boot` event is intentionally excluded; it is emitted
+ * by the SDK itself rather than by the native bridge and would never
+ * be observed by a wildcard listener that proxies "scanner traffic".
  */
 export const APP_EVENT_NAMES = [
   'scan',
@@ -360,4 +389,4 @@ export const APP_EVENT_NAMES = [
   'navigate',
   'ready',
   'settings',
-] as const satisfies readonly (keyof AppEvents)[];
+] as const satisfies readonly Exclude<keyof AppEvents, 'boot'>[];

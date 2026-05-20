@@ -28,8 +28,10 @@ function createMockAtw(): jest.Mocked<Addtowallet> {
 
 /**
  * Installs `window.atw` and `window.ReactNativeWebView` on the global
- * scope so the `WebApp` constructor can read them. Pass `undefined`
- * for either to simulate the non-embedded case.
+ * scope. `WebApp` looks these up lazily on every bridge access, so
+ * calling this between operations simulates the native runtime
+ * injecting the bridge after construction. Pass `undefined` for either
+ * to simulate the non-embedded case.
  */
 function installWindow(opts: {
   atw?: Addtowallet;
@@ -41,7 +43,25 @@ function installWindow(opts: {
   };
 }
 
+
+/**
+ * Bridge poll timeout, mirrored from `WebApp.ts`. Hard-coded here so a
+ * regression in the SDK's constant is caught by these tests rather
+ * than silently re-baselined.
+ */
+const BRIDGE_POLL_TIMEOUT_MS = 10000;
+
+let warnSpy: jest.SpyInstance;
+let errorSpy: jest.SpyInstance;
+
+beforeEach(() => {
+  warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
 afterEach(() => {
+  warnSpy.mockRestore();
+  errorSpy.mockRestore();
   delete (globalThis as any).window;
   jest.useRealTimers();
   jest.clearAllMocks();
@@ -81,6 +101,16 @@ describe('WebApp', () => {
       const app = new WebApp();
 
       expect(app.isEmbedded).toBe(false);
+    });
+
+    it('live-flips from false to true when the bridge is injected after construction', () => {
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+      expect(app.isEmbedded).toBe(false);
+
+      installWindow({ atw: createMockAtw(), reactNativeWebView: {} });
+
+      expect(app.isEmbedded).toBe(true);
     });
   });
 
@@ -160,6 +190,66 @@ describe('WebApp', () => {
         payload: { status: 'ok' },
       });
     });
+
+    it('queues messages until the bridge appears and flushes them in order', () => {
+      jest.useFakeTimers();
+      const atw = createMockAtw();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+
+      app.send('ready', { status: 'first' });
+      app.send('navigate', { url: 'https://example.test' });
+      app.send('settings', { settings: { pin: '1234' } });
+      expect(atw.send).not.toHaveBeenCalled();
+
+      installWindow({ atw, reactNativeWebView: {} });
+      jest.advanceTimersByTime(50);
+
+      expect(atw.send).toHaveBeenCalledTimes(3);
+      expect(atw.send.mock.calls[0][0]).toEqual({
+        action: 'ready',
+        payload: { status: 'first' },
+      });
+      expect(atw.send.mock.calls[1][0]).toEqual({
+        action: 'navigate',
+        payload: { url: 'https://example.test' },
+      });
+      expect(atw.send.mock.calls[2][0]).toEqual({
+        action: 'settings',
+        payload: { settings: { pin: '1234' } },
+      });
+    });
+
+    it('drops queued messages and warns when the bridge poll times out', () => {
+      jest.useFakeTimers();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+
+      app.send('ready', { status: 'first' });
+      app.send('navigate', { url: 'https://example.test' });
+
+      jest.advanceTimersByTime(BRIDGE_POLL_TIMEOUT_MS);
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy.mock.calls[0][0]).toMatch(
+        /window\.atw did not appear within 10000ms/,
+      );
+      expect(warnSpy.mock.calls[0][0]).toMatch(/2 queued message\(s\)/);
+
+      const atw = createMockAtw();
+      installWindow({ atw, reactNativeWebView: {} });
+      app.send('ready', { status: 'after' });
+      expect(atw.send).not.toHaveBeenCalled();
+    });
+
+    it('drops messages silently when the SDK is not in a WebView at all', () => {
+      installWindow({});
+      const app = new WebApp();
+
+      app.send('ready', { status: 'ok' });
+
+      expect(warnSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe('on (single event)', () => {
@@ -234,6 +324,41 @@ describe('WebApp', () => {
       expect(atw.on).not.toHaveBeenCalled();
       expect(atw.off).not.toHaveBeenCalled();
       jest.useRealTimers();
+    });
+
+    it('app.off() cancels a pending poll subscription before the bridge appears', () => {
+      jest.useFakeTimers();
+      const atw = createMockAtw();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+      const cb = jest.fn();
+
+      app.on('scan', cb);
+      app.off('scan', cb);
+
+      installWindow({ atw, reactNativeWebView: {} });
+      jest.advanceTimersByTime(50);
+
+      expect(atw.on).not.toHaveBeenCalled();
+    });
+
+    it('app.off() leaves unrelated pending subscriptions intact', () => {
+      jest.useFakeTimers();
+      const atw = createMockAtw();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+      const scanCb = jest.fn();
+      const standbyCb = jest.fn();
+
+      app.on('scan', scanCb);
+      app.on('standby', standbyCb);
+      app.off('scan', scanCb);
+
+      installWindow({ atw, reactNativeWebView: {} });
+      jest.advanceTimersByTime(50);
+
+      expect(atw.on).toHaveBeenCalledTimes(1);
+      expect(atw.on).toHaveBeenCalledWith('standby', standbyCb);
     });
   });
 
@@ -397,6 +522,234 @@ describe('WebApp', () => {
       app.off('*', cb);
 
       expect(atw.off).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('boot event', () => {
+    it('fires asynchronously with isEmbedded: true when both globals are present at construction', () => {
+      jest.useFakeTimers();
+      installWindow({ atw: createMockAtw(), reactNativeWebView: {} });
+      const app = new WebApp();
+      const cb = jest.fn();
+
+      app.on('boot', cb);
+      expect(cb).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(0);
+
+      expect(cb).toHaveBeenCalledTimes(1);
+      expect(cb).toHaveBeenCalledWith({
+        action: 'boot',
+        payload: { isEmbedded: true },
+      });
+    });
+
+    it('fires asynchronously with isEmbedded: false when ReactNativeWebView is missing', () => {
+      jest.useFakeTimers();
+      installWindow({});
+      const app = new WebApp();
+      const cb = jest.fn();
+
+      app.on('boot', cb);
+      jest.advanceTimersByTime(0);
+
+      expect(cb).toHaveBeenCalledTimes(1);
+      expect(cb).toHaveBeenCalledWith({
+        action: 'boot',
+        payload: { isEmbedded: false },
+      });
+    });
+
+    it('fires once with isEmbedded: true after the bridge is injected mid-poll', () => {
+      jest.useFakeTimers();
+      const atw = createMockAtw();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+      const cb = jest.fn();
+
+      app.on('boot', cb);
+      expect(cb).not.toHaveBeenCalled();
+
+      installWindow({ atw, reactNativeWebView: {} });
+      jest.advanceTimersByTime(50);
+
+      expect(cb).toHaveBeenCalledTimes(1);
+      expect(cb).toHaveBeenCalledWith({
+        action: 'boot',
+        payload: { isEmbedded: true },
+      });
+    });
+
+    it('fires with isEmbedded: false after the poll timeout', () => {
+      jest.useFakeTimers();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+      const cb = jest.fn();
+
+      app.on('boot', cb);
+      jest.advanceTimersByTime(BRIDGE_POLL_TIMEOUT_MS);
+
+      expect(cb).toHaveBeenCalledTimes(1);
+      expect(cb).toHaveBeenCalledWith({
+        action: 'boot',
+        payload: { isEmbedded: false },
+      });
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('replays the cached payload for late subscribers', () => {
+      jest.useFakeTimers();
+      const atw = createMockAtw();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+      const earlyCb = jest.fn();
+
+      app.on('boot', earlyCb);
+      installWindow({ atw, reactNativeWebView: {} });
+      jest.advanceTimersByTime(50);
+      expect(earlyCb).toHaveBeenCalledTimes(1);
+
+      const lateCb = jest.fn();
+      app.on('boot', lateCb);
+      expect(lateCb).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(0);
+      expect(lateCb).toHaveBeenCalledTimes(1);
+      expect(lateCb).toHaveBeenCalledWith({
+        action: 'boot',
+        payload: { isEmbedded: true },
+      });
+    });
+
+    it('disposer prevents the deferred replay from firing', () => {
+      jest.useFakeTimers();
+      installWindow({ atw: createMockAtw(), reactNativeWebView: {} });
+      const app = new WebApp();
+      const cb = jest.fn();
+
+      const off = app.on('boot', cb);
+      off();
+      jest.advanceTimersByTime(0);
+
+      expect(cb).not.toHaveBeenCalled();
+    });
+
+    it('disposer removes a parked listener before the bridge transition', () => {
+      jest.useFakeTimers();
+      const atw = createMockAtw();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+      const cb = jest.fn();
+
+      const off = app.on('boot', cb);
+      off();
+
+      installWindow({ atw, reactNativeWebView: {} });
+      jest.advanceTimersByTime(50);
+
+      expect(cb).not.toHaveBeenCalled();
+    });
+
+    it('app.off("boot", cb) removes a parked listener', () => {
+      jest.useFakeTimers();
+      const atw = createMockAtw();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+      const cb = jest.fn();
+
+      app.on('boot', cb);
+      app.off('boot', cb);
+
+      installWindow({ atw, reactNativeWebView: {} });
+      jest.advanceTimersByTime(50);
+
+      expect(cb).not.toHaveBeenCalled();
+    });
+
+    it("is not invoked by the '*' wildcard fan-out", () => {
+      jest.useFakeTimers();
+      const atw = createMockAtw();
+      installWindow({ atw, reactNativeWebView: {} });
+      const app = new WebApp();
+      const cb = jest.fn();
+
+      app.on('*', cb);
+
+      expect(atw.on).toHaveBeenCalledTimes(APP_EVENT_NAMES.length);
+      const subscribedEvents = atw.on.mock.calls.map((c) => c[0]);
+      expect(subscribedEvents).not.toContain('boot');
+
+      jest.advanceTimersByTime(0);
+      expect(cb).not.toHaveBeenCalled();
+    });
+
+    it('continues invoking other listeners when one throws', () => {
+      jest.useFakeTimers();
+      const atw = createMockAtw();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+      const cbA = jest.fn(() => {
+        throw new Error('listener exploded');
+      });
+      const cbB = jest.fn();
+
+      app.on('boot', cbA);
+      app.on('boot', cbB);
+
+      installWindow({ atw, reactNativeWebView: {} });
+      jest.advanceTimersByTime(50);
+
+      expect(cbA).toHaveBeenCalledTimes(1);
+      expect(cbB).toHaveBeenCalledTimes(1);
+      expect(errorSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('bridge poll timeout', () => {
+    it('emits console.warn exactly once', () => {
+      jest.useFakeTimers();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+      app.on('scan', jest.fn());
+
+      jest.advanceTimersByTime(BRIDGE_POLL_TIMEOUT_MS);
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy.mock.calls[0][0]).toMatch(
+        /window\.atw did not appear within 10000ms/,
+      );
+    });
+
+    it('reports the count of dropped messages and subscriptions in the warning', () => {
+      jest.useFakeTimers();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+
+      app.on('scan', jest.fn());
+      app.on('standby', jest.fn());
+      app.send('ready');
+      app.send('navigate', { url: '/' });
+      app.send('settings', { settings: {} });
+
+      jest.advanceTimersByTime(BRIDGE_POLL_TIMEOUT_MS);
+
+      expect(warnSpy.mock.calls[0][0]).toMatch(/3 queued message\(s\)/);
+      expect(warnSpy.mock.calls[0][0]).toMatch(/2 pending subscription\(s\)/);
+    });
+
+    it('subsequent on/send calls after timeout do not re-warn', () => {
+      jest.useFakeTimers();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+
+      app.on('scan', jest.fn());
+      jest.advanceTimersByTime(BRIDGE_POLL_TIMEOUT_MS);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+
+      app.on('standby', jest.fn());
+      app.send('ready');
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
     });
   });
 

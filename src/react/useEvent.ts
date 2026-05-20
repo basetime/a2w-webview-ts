@@ -11,10 +11,13 @@ import { useWebApp } from './useWebApp';
  * a ref so passing an inline function does not resubscribe on every
  * render; the latest callback is always invoked when the event fires.
  *
- * Pass `'*'` as the event name to subscribe to every built-in
+ * Pass `'*'` as the event name to subscribe to every built-in native
  * `AppEvents` key (`scan`, `standby`, `error`, `navigate`, `ready`,
  * `settings`). The callback receives messages whose `action` field is
- * the actual event name (e.g. `'scan'`), not `'*'`.
+ * the actual event name (e.g. `'scan'`), not `'*'`. The synthetic
+ * `'boot'` event is **not** included in the wildcard fan-out; subscribe
+ * to it explicitly with `useEvent('boot', ...)` if you need to gate UI
+ * on whether the native bridge is available.
  *
  * @param event The event name to listen for, or `'*'` for all events.
  * @param callback Invoked with the event message when the event fires.

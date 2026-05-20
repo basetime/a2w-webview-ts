@@ -160,7 +160,7 @@ describe('WebApp', () => {
       installWindow({});
       const app = new WebApp();
 
-      expect(() => app.send('ready', { status: 'ok' })).not.toThrow();
+      expect(() => app.send('ready')).not.toThrow();
     });
 
     it('uses the current bridge when it becomes available after construction', () => {
@@ -169,11 +169,11 @@ describe('WebApp', () => {
       const app = new WebApp();
 
       installWindow({ atw, reactNativeWebView: {} });
-      app.send('ready', { status: 'ok' });
+      app.send('navigate', { url: 'https://example.test' });
 
       expect(atw.send).toHaveBeenCalledWith({
-        action: 'ready',
-        payload: { status: 'ok' },
+        action: 'navigate',
+        payload: { url: 'https://example.test' },
       });
     });
 
@@ -183,11 +183,11 @@ describe('WebApp', () => {
       const app = new WebApp();
 
       const detached = app.send;
-      detached('ready', { status: 'ok' });
+      detached('navigate', { url: 'https://example.test' });
 
       expect(atw.send).toHaveBeenCalledWith({
-        action: 'ready',
-        payload: { status: 'ok' },
+        action: 'navigate',
+        payload: { url: 'https://example.test' },
       });
     });
 
@@ -197,8 +197,8 @@ describe('WebApp', () => {
       installWindow({ atw: undefined, reactNativeWebView: {} });
       const app = new WebApp();
 
-      app.send('ready', { status: 'first' });
-      app.send('navigate', { url: 'https://example.test' });
+      app.send('navigate', { url: 'https://first.test' });
+      app.send('navigate', { url: 'https://second.test' });
       app.send('settings', { settings: { pin: '1234' } });
       expect(atw.send).not.toHaveBeenCalled();
 
@@ -207,12 +207,12 @@ describe('WebApp', () => {
 
       expect(atw.send).toHaveBeenCalledTimes(3);
       expect(atw.send.mock.calls[0][0]).toEqual({
-        action: 'ready',
-        payload: { status: 'first' },
+        action: 'navigate',
+        payload: { url: 'https://first.test' },
       });
       expect(atw.send.mock.calls[1][0]).toEqual({
         action: 'navigate',
-        payload: { url: 'https://example.test' },
+        payload: { url: 'https://second.test' },
       });
       expect(atw.send.mock.calls[2][0]).toEqual({
         action: 'settings',
@@ -225,7 +225,7 @@ describe('WebApp', () => {
       installWindow({ atw: undefined, reactNativeWebView: {} });
       const app = new WebApp();
 
-      app.send('ready', { status: 'first' });
+      app.send('ready');
       app.send('navigate', { url: 'https://example.test' });
 
       jest.advanceTimersByTime(BRIDGE_POLL_TIMEOUT_MS);
@@ -238,7 +238,7 @@ describe('WebApp', () => {
 
       const atw = createMockAtw();
       installWindow({ atw, reactNativeWebView: {} });
-      app.send('ready', { status: 'after' });
+      app.send('ready');
       expect(atw.send).not.toHaveBeenCalled();
     });
 
@@ -246,7 +246,7 @@ describe('WebApp', () => {
       installWindow({});
       const app = new WebApp();
 
-      app.send('ready', { status: 'ok' });
+      app.send('ready');
 
       expect(warnSpy).not.toHaveBeenCalled();
     });
@@ -396,14 +396,11 @@ describe('WebApp', () => {
         payload: { found: true } as unknown as ScanPayload,
       };
       handlers.get('scan')!(scanMessage);
-      handlers.get('ready')!({ action: 'ready', payload: { status: 'ok' } });
+      handlers.get('ready')!({ action: 'ready' });
 
       expect(cb).toHaveBeenCalledTimes(2);
       expect(cb).toHaveBeenNthCalledWith(1, scanMessage);
-      expect(cb).toHaveBeenNthCalledWith(2, {
-        action: 'ready',
-        payload: { status: 'ok' },
-      });
+      expect(cb).toHaveBeenNthCalledWith(2, { action: 'ready' });
     });
 
     it('disposer removes every per-event subscription it created', () => {

@@ -108,7 +108,7 @@ useEffect(() => {
   const off = webApp.on('scan', ({ payload }) => {
     setPayload(payload ?? null);
   });
-  webApp.send('ready', { status: 'ready' });
+  webApp.send('ready');
   return off;
 }, []);
 ```

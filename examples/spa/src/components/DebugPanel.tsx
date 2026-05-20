@@ -82,7 +82,7 @@ const DebugPanel = ({
               </button>
               <button
                 type="button"
-                onClick={() => webApp.send('ready', { status: 'ready' })}
+                onClick={() => webApp.send('ready')}
               >
                 resend ready
               </button>

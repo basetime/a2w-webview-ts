@@ -24,7 +24,7 @@ const ErrorPage = (): React.ReactElement => {
       ]);
     });
 
-    webApp.send('ready', { status: 'ready' });
+    webApp.send('ready');
 
     return () => {
       off();

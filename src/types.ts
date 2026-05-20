@@ -196,16 +196,6 @@ export interface NavigatePayload {
 }
 
 /**
- * Payload for the 'ready' event.
- */
-export interface ReadyPayload {
-  /**
-   * The status of the webview.
-   */
-  status?: string;
-}
-
-/**
  * Payload for the synthetic 'boot' event.
  *
  * The `boot` event is emitted by the SDK itself (not by the native
@@ -312,18 +302,37 @@ export interface SettingsPayload {
 
 /**
  * The event message.
+ *
+ * `payload` is required when the event's payload type cannot be
+ * `undefined` (e.g. `boot`, `scan`, `navigate`), and optional when the
+ * event declares its payload as `undefined` or `T | undefined` (e.g.
+ * `ready`). This lets consumers dot into `payload.foo` directly for
+ * events that always carry one, without a redundant nullish check.
  */
-export type Message<E extends Record<string, unknown>, K extends keyof E> = {
-  /**
-   * The action that was triggered.
-   */
-  action: K;
+export type Message<E extends Record<string, unknown>, K extends keyof E> =
+  undefined extends E[K]
+    ? {
+        /**
+         * The action that was triggered.
+         */
+        action: K;
 
-  /**
-   * The payload of the event.
-   */
-  payload?: E[K];
-};
+        /**
+         * The payload of the event.
+         */
+        payload?: E[K];
+      }
+    : {
+        /**
+         * The action that was triggered.
+         */
+        action: K;
+
+        /**
+         * The payload of the event.
+         */
+        payload: E[K];
+      };
 
 /**
  * The events that can be triggered.
@@ -362,9 +371,11 @@ export type AppEvents = {
   navigate: NavigatePayload;
 
   /**
-   * Triggered when the webview is ready.
+   * Triggered when the webview is ready. This event carries no
+   * payload; callers should invoke `send('ready')` with no second
+   * argument.
    */
-  ready: ReadyPayload;
+  ready: undefined;
 
   /**
    * Triggered to tell the scanner to update the settings.

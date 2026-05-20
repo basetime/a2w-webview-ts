@@ -64,7 +64,7 @@ const App = (): React.ReactElement => {
    * this to hide its global loading spinner.
    */
   useEffect(() => {
-    webApp.send('ready', { status: 'ready' });
+    webApp.send('ready');
   }, [webApp]);
 
   let screen: React.ReactElement;

@@ -8,7 +8,6 @@ export type {
   LogLevel,
   Message,
   NavigatePayload,
-  ReadyPayload,
   ScanPayload,
   ScannerDeviceInfo,
   Settings,

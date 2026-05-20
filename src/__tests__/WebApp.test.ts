@@ -43,6 +43,7 @@ function installWindow(opts: {
 
 afterEach(() => {
   delete (globalThis as any).window;
+  jest.useRealTimers();
   jest.clearAllMocks();
 });
 
@@ -132,6 +133,20 @@ describe('WebApp', () => {
       expect(() => app.send('ready', { status: 'ok' })).not.toThrow();
     });
 
+    it('uses the current bridge when it becomes available after construction', () => {
+      const atw = createMockAtw();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+
+      installWindow({ atw, reactNativeWebView: {} });
+      app.send('ready', { status: 'ok' });
+
+      expect(atw.send).toHaveBeenCalledWith({
+        action: 'ready',
+        payload: { status: 'ok' },
+      });
+    });
+
     it('is bound to the instance and can be passed as a callback', () => {
       const atw = createMockAtw();
       installWindow({ atw, reactNativeWebView: {} });
@@ -183,6 +198,42 @@ describe('WebApp', () => {
       const off = app.on('navigate', cb);
 
       expect(() => off()).not.toThrow();
+    });
+
+    it('waits for atw when ReactNativeWebView exists before the bridge is injected', () => {
+      jest.useFakeTimers();
+      const atw = createMockAtw();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+      const cb = jest.fn();
+
+      app.on('standby', cb);
+      expect(atw.on).not.toHaveBeenCalled();
+
+      installWindow({ atw, reactNativeWebView: {} });
+      jest.advanceTimersByTime(50);
+
+      expect(atw.on).toHaveBeenCalledTimes(1);
+      expect(atw.on).toHaveBeenCalledWith('standby', cb);
+      jest.useRealTimers();
+    });
+
+    it('does not subscribe if disposed before the delayed bridge appears', () => {
+      jest.useFakeTimers();
+      const atw = createMockAtw();
+      installWindow({ atw: undefined, reactNativeWebView: {} });
+      const app = new WebApp();
+      const cb = jest.fn();
+
+      const off = app.on('scan', cb);
+      off();
+
+      installWindow({ atw, reactNativeWebView: {} });
+      jest.advanceTimersByTime(50);
+
+      expect(atw.on).not.toHaveBeenCalled();
+      expect(atw.off).not.toHaveBeenCalled();
+      jest.useRealTimers();
     });
   });
 

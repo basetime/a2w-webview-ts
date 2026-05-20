@@ -1,6 +1,9 @@
 import type { Addtowallet } from './Addtowallet';
 import { APP_EVENT_NAMES, type AppEvents, type Message } from './types';
 
+const BRIDGE_POLL_INTERVAL_MS = 50;
+const BRIDGE_POLL_TIMEOUT_MS = 10000;
+
 /**
  * Provides two way communication with the atw scanner.
  */
@@ -8,12 +11,9 @@ export default class WebApp<E extends Record<string, unknown> = AppEvents> {
   /**
    * Is the app embedded in the atw scanner webview?
    */
-  public readonly isEmbedded: boolean = true;
-
-  /**
-   * The atw object.
-   */
-  private readonly atw?: Addtowallet;
+  public get isEmbedded(): boolean {
+    return this.getBridge() !== undefined;
+  }
 
   /**
    * Tracks the per-event removers created when subscribing via the
@@ -25,10 +25,75 @@ export default class WebApp<E extends Record<string, unknown> = AppEvents> {
   /**
    * Constructor.
    */
-  constructor() {
-    this.isEmbedded = window.ReactNativeWebView !== undefined && window.atw !== undefined;
-    this.atw = window.atw;
-  }
+  constructor() {}
+
+  /**
+   * Returns the current native bridge if it exists. The bridge can be injected
+   * after this class is constructed on older Android WebView runtimes, so we
+   * intentionally avoid caching it in the constructor.
+   */
+  private getBridge = (): Addtowallet | undefined => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+
+    if (window.ReactNativeWebView === undefined || window.atw === undefined) {
+      return undefined;
+    }
+
+    return window.atw;
+  };
+
+  /**
+   * Subscribes once the native bridge exists. In normal browsers this remains
+   * a no-op; in React Native WebView it waits briefly for `window.atw`.
+   */
+  private subscribeWhenBridgeReady = (
+    event: string,
+    callback: (message: Message<E, any>) => void,
+  ): (() => void) => {
+    let attached = false;
+    let cancelled = false;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const startedAt = Date.now();
+
+    const attach = () => {
+      if (cancelled) {
+        return;
+      }
+
+      const bridge = this.getBridge();
+      if (bridge) {
+        bridge.on(event, callback);
+        attached = true;
+        return;
+      }
+
+      if (typeof window === 'undefined' || window.ReactNativeWebView === undefined) {
+        return;
+      }
+
+      if (Date.now() - startedAt >= BRIDGE_POLL_TIMEOUT_MS) {
+        return;
+      }
+
+      timeout = setTimeout(attach, BRIDGE_POLL_INTERVAL_MS);
+    };
+
+    attach();
+
+    return () => {
+      cancelled = true;
+
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+
+      if (attached) {
+        this.getBridge()?.off(event, callback);
+      }
+    };
+  };
 
   /**
    * Sends a message to the scanner.
@@ -37,7 +102,7 @@ export default class WebApp<E extends Record<string, unknown> = AppEvents> {
    * @param payload The message to post.
    */
   public send = <K extends keyof E>(event: K, payload?: E[K]): void => {
-    this.atw?.send({
+    this.getBridge()?.send({
       action: event.toString(),
       payload: payload ?? ({} as E[K]),
     });
@@ -75,10 +140,7 @@ export default class WebApp<E extends Record<string, unknown> = AppEvents> {
         this.wildcardRemovers.delete(callback);
       };
     }
-    this.atw?.on(event.toString(), callback);
-    return () => {
-      this.off(event as keyof E, callback as (m: Message<E, keyof E>) => void);
-    };
+    return this.subscribeWhenBridgeReady(event.toString(), callback);
   }
 
   /**
@@ -105,6 +167,6 @@ export default class WebApp<E extends Record<string, unknown> = AppEvents> {
       }
       return;
     }
-    this.atw?.off(event.toString(), callback);
+    this.getBridge()?.off(event.toString(), callback);
   }
 }

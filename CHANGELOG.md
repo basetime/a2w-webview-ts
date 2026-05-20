@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.0.1 - 2026-05-20
+
 - Refactor 'ready' event handling to remove payload requirement across the application, updating related components and tests accordingly.. (`b9d7d71`)
 - Update @basetime/a2w-webview-ts dependency to version 1.0.0 in SPA and standard examples, and adjust pnpm-lock.yaml accordingly.. (`26ddeaa`)
 

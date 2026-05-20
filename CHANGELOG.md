@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- See [MIGRATION.md](MIGRATION.md) for the v0.2.7 → v1.0.0 upgrade notes covering everything below.
 - Add synthetic `boot` event (`AppEvents['boot']`, payload `{ isEmbedded }`) that fires once per `WebApp` instance after the SDK has resolved native-bridge availability, with replay semantics for late subscribers. Recommended replacement for the synchronous `isEmbedded` getter, which is now `@deprecated`.
 - Queue `webApp.send(...)` calls that arrive before the native bridge is injected; flush them in order once the bridge appears.
 - Make `webApp.off(event, cb)` cancel a still-pending subscription that hasn't been attached to the bridge yet (previously was a silent no-op).

@@ -1,0 +1,1 @@
+import{_ as i,o as a,c as n,a2 as h}from"./chunks/framework.BTPHvB1u.js";const g=JSON.parse('{"title":"Usage","description":"","frontmatter":{},"headers":[],"relativePath":"usage.md","filePath":"usage.md"}'),p={name:"usage.md"};function l(k,s,t,e,E,r){return a(),n("div",null,[...s[0]||(s[0]=[h("",4)])])}const y=i(p,[["render",l]]);export{g as __pageData,y as default};

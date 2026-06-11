@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Enhance package.json with new documentation scripts and update dependencies for concurrently and vitepress. Update pnpm-lock.yaml to reflect these changes. Revise README.md to streamline documentation and improve navigation links.. (`352f1d2`)
 - Update MIGRATION.md to reflect changes in event map and build target version, renumbering sections accordingly.. (`aa0045a`)
 - Update @basetime/a2w-webview-ts dependency to version 1.0.1 in SPA and standard examples, and synchronize pnpm-lock.yaml files.. (`fadfdbc`)
 

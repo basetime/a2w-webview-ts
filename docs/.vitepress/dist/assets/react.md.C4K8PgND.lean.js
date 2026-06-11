@@ -1,0 +1,1 @@
+import{_ as i,o as a,c as n,a2 as h}from"./chunks/framework.BTPHvB1u.js";const g=JSON.parse('{"title":"React","description":"","frontmatter":{},"headers":[],"relativePath":"react.md","filePath":"react.md"}'),t={name:"react.md"};function k(l,s,p,e,E,r){return a(),n("div",null,[...s[0]||(s[0]=[h("",8)])])}const y=i(t,[["render",k]]);export{g as __pageData,y as default};

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.0.2 - 2026-06-11
+
 - Update README and documentation files to include new logo and improve navigation structure. Adjust theme configuration for logo display in VitePress. Update asset references in generated HTML files to reflect recent changes.. (`8c1007a`)
 - Enhance package.json with new documentation scripts and update dependencies for concurrently and vitepress. Update pnpm-lock.yaml to reflect these changes. Revise README.md to streamline documentation and improve navigation links.. (`352f1d2`)
 - Update MIGRATION.md to reflect changes in event map and build target version, renumbering sections accordingly.. (`aa0045a`)

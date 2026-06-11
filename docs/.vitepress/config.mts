@@ -52,7 +52,13 @@ export default defineConfig({
     },
   },
   themeConfig: {
-    logo: false,
+    // Compact mark for the mobile nav bar; desktop uses the full-width
+    // sidebar brand (see theme/WebviewSidebarBrand.vue + custom.css).
+    logo: {
+      src: 'https://cdn.addtowallet.io/img/a2w-webview-ts-logo.png',
+      alt: 'a2w-webview-ts',
+    },
+    siteTitle: false,
     nav: [
       {
         text: `v${pkg.version}`,

@@ -11,6 +11,66 @@
   display: inline-block;
 }
 
+/* Brand mark: full width of the sidebar column (see WebviewSidebarBrand.vue) */
+.webview-sidebar-brand {
+  display: block;
+  margin: 0 -32px 20px;
+  padding: 0 0 20px;
+  border-bottom: 1px solid var(--vp-c-divider);
+  box-sizing: border-box;
+  width: calc(100% + 64px);
+}
+
+.webview-sidebar-brand img {
+  display: block;
+  width: 95%;
+  height: auto;
+}
+
+/*
+ * Desktop: full-width logo flush with search box top; sticky while nav scrolls.
+ */
+@media (min-width: 960px) {
+  .VPNavBarTitle {
+    display: none;
+  }
+
+  /* Start sidebar content level with the top of the search box (12px). */
+  .VPSidebar {
+    padding-top: 12px !important;
+  }
+
+  .VPSidebar .curtain {
+    display: none !important;
+  }
+
+  /* Pin the logo; let the nav scroll underneath it.
+     top: 0 — sticky offset is relative to the sidebar padding box, which
+     already starts at 12px (flush with the search box). */
+  .webview-sidebar-brand {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--vp-sidebar-bg-color);
+  }
+}
+
+/*
+ * Mobile: the sidebar is a hidden drawer, so the full-width brand would be
+ * invisible. Show the compact themeConfig.logo in the nav bar instead and
+ * keep the drawer free of a duplicate logo.
+ */
+@media (max-width: 959px) {
+  .webview-sidebar-brand {
+    display: none;
+  }
+
+  .VPNavBarTitle img.logo {
+    height: 36px;
+    width: auto;
+  }
+}
+
 @media (min-width: 768px) {
   .VPNavBarSearch {
     flex: 1 1 auto;

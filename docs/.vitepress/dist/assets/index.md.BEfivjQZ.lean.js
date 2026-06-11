@@ -1,0 +1,1 @@
+import{_ as a,o as t,c as r,a2 as n}from"./chunks/framework.BTPHvB1u.js";const c=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"index.md","filePath":"index.md"}'),i={name:"index.md"};function o(s,e,p,d,l,m){return t(),r("div",null,[...e[0]||(e[0]=[n("",4)])])}const g=a(i,[["render",o]]);export{c as __pageData,g as default};

@@ -10,3 +10,4 @@ gha-creds-*.json
 key.json
 *.key.json
 service-account*.json
+docs/.vitepress/cache

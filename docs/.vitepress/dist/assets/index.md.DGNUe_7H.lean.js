@@ -1,1 +1,0 @@
-import{_ as a,o as t,c as r,a2 as i}from"./chunks/framework.BTPHvB1u.js";const _=JSON.parse('{"title":"a2w-webview-ts","description":"","frontmatter":{},"headers":[],"relativePath":"index.md","filePath":"index.md"}'),n={name:"index.md"};function s(o,e,d,p,w,l){return t(),r("div",null,[...e[0]||(e[0]=[i("",4)])])}const c=a(n,[["render",s]]);export{_ as __pageData,c as default};

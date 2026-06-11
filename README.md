@@ -1,4 +1,4 @@
-# a2w-webview-ts
+![Logo](https://cdn.addtowallet.io/img/a2w-webview-ts-logo.png)
 
 **Full documentation:** [https://basetime.github.io/a2w-webview-ts/](https://basetime.github.io/a2w-webview-ts/)
 
@@ -12,14 +12,14 @@
 
 ## Documentation
 
-| Topic | Link |
-| --- | --- |
-| Getting started | [Introduction](https://basetime.github.io/a2w-webview-ts/) |
-| Installation | [Installation](https://basetime.github.io/a2w-webview-ts/installation) |
-| Usage | [Usage](https://basetime.github.io/a2w-webview-ts/usage) |
-| React | [React](https://basetime.github.io/a2w-webview-ts/react) |
-| Events | [Events](https://basetime.github.io/a2w-webview-ts/events) |
-| Migration | [Migration Guide](https://basetime.github.io/a2w-webview-ts/migration) |
+| Topic           | Link                                                                   |
+| --------------- | ---------------------------------------------------------------------- |
+| Getting started | [Introduction](https://basetime.github.io/a2w-webview-ts/)             |
+| Installation    | [Installation](https://basetime.github.io/a2w-webview-ts/installation) |
+| Usage           | [Usage](https://basetime.github.io/a2w-webview-ts/usage)               |
+| React           | [React](https://basetime.github.io/a2w-webview-ts/react)               |
+| Events          | [Events](https://basetime.github.io/a2w-webview-ts/events)             |
+| Migration       | [Migration Guide](https://basetime.github.io/a2w-webview-ts/migration) |
 
 Canonical docs live in [`docs/`](./docs/). Edit those pages directly, then run `pnpm docs:build:nav` to refresh the VitePress sidebar.
 

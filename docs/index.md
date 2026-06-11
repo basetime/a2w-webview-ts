@@ -1,4 +1,4 @@
-# a2w-webview-ts
+![Logo](https://cdn.addtowallet.io/img/a2w-webview-ts-logo.png)
 
 SDK for webview apps running inside the Addtowallet scanner.
 
